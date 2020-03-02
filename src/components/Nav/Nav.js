@@ -11,7 +11,9 @@ const useStyles = makeStyles({
   list: {
     width: '20vw',
     height: '100vh',
-    backgroundColor: 'rgba(234, 247, 247, 0.762)',
+    color: 'white',
+    backgroundColor: 'black',
+    border: '1px solid white',
     backgroundImage: 'url(/binaryEmmaVanninen.png)',
     backgroundRepeat: 'repeat',
     backgroundSize: '100%'

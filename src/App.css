@@ -1,4 +1,9 @@
+:root {
+  background-color: rgb(10, 10, 10);
+}
+
 .App {
+    color: white;
   display: flex;
   flex-direction: row;
   /* text-align: center; */
