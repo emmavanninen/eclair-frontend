@@ -38,13 +38,17 @@ export default function Nav() {
   const navList = side => (
     <div
       className={classes.list}
-      role='presentation'
-      onClick={toggleDrawer(side, false)}
-      onKeyDown={toggleDrawer(side, false)}
+      //   role='presentation'
+      //   onClick={toggleDrawer(side, false)}
+      //   onKeyDown={toggleDrawer(side, false)}
     >
       <List>
-        <div className='closeMenu'>x
-          {/* <img src='./cancel.png' alt='close menu icon'></img> */}
+        <div
+          className='closeMenu'
+          onClick={toggleDrawer(side, false)}
+          onKeyDown={toggleDrawer(side, false)}
+        >
+          x{/* <img src='./cancel.png' alt='close menu icon'></img> */}
         </div>
         <ul className='nav-list'>
           <li>
@@ -60,7 +64,8 @@ export default function Nav() {
 
   return (
     <div>
-      <div onClick={toggleDrawer('left', true)} className='menuicon'>MENU
+      <div onClick={toggleDrawer('left', true)} className='menuicon'>
+        MENU
         {/* <img src='./menu.png' alt='menu icon'></img> */}
       </div>
       <Drawer open={state.left} onClose={toggleDrawer('left', false)}>

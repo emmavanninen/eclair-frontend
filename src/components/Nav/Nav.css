@@ -1,5 +1,6 @@
-.closedNav {
-  width: fit-content;
+.closeMenu {
+  text-align: center;
+  cursor: pointer;
 }
 
 .menuicon {
@@ -9,4 +10,3 @@
 .menuicon img {
   height: 10vh;
 }
-
