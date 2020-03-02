@@ -54,6 +54,11 @@ export default function Nav() {
         </div>
         <ul className='nav-list'>
           <li>
+            <a href='http://localhost:8888/'>
+              <button>Login with Spotify</button>
+            </a>
+          </li>
+          <li>
             <RegisterForm />
           </li>
           <li>
