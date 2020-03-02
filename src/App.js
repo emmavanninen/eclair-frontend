@@ -1,6 +1,7 @@
 import React from 'react';
 import Nav from './components/Nav/Nav'
 import Lightscreen from './components/Lightscreen/Lightscreen'
+import Home from './components/Home/Home'
 import './App.css';
 
 function App() {
@@ -8,7 +9,7 @@ function App() {
     <div className="App">
         <Nav/>
         <Lightscreen/>
-        poop
+        <Home/>
     </div>
   );
 }

@@ -3,8 +3,8 @@
 }
 
 .App {
-    color: white;
+  margin: 5vmin;
+  color: white;
   display: flex;
   flex-direction: row;
-  /* text-align: center; */
 }
