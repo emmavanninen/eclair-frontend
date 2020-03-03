@@ -16,7 +16,9 @@ export default class PlaySong extends Component {
   }
 
   componentDidMount() {
-    this.getSpotifyUser(this.getHashParams())
+    if (this.state.isAuth) {
+      this.getSpotifyUser(this.getHashParams())
+    }
   }
 
   getHashParams() {
@@ -37,7 +39,7 @@ export default class PlaySong extends Component {
     }
   }
 
-  getSpotifyUser = async(token) => {
+  getSpotifyUser = async token => {
     await $.ajax({
       url: 'https://api.spotify.com/v1/me',
       type: 'GET',
@@ -46,8 +48,6 @@ export default class PlaySong extends Component {
       },
 
       success: data => {
-        // console.log(`data`, data.device.id)
-
         this.setState({
           user: {
             name: data.display_name,
