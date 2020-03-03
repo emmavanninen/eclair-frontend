@@ -4,49 +4,77 @@ import Spotify from 'spotify-web-api-js'
 
 export default class PlaySong extends Component {
   state = {
-    loggedIn: false,
+    isAuth: false,
     nowPlaying: {
       name: 'unknown',
       image: 'unknown'
+    },
+    user: {
+      name: '',
+      email: ''
     }
   }
 
-//   componentDidMount = async () => {
-//     await this.getHashParams()
-//   }
+  componentDidMount() {
+    this.getSpotifyUser(this.getHashParams())
+  }
 
   getHashParams() {
     const hashParams = {}
     let e,
       r = /([^&;=]+)=?([^&;]*)/g,
-      q = window.location.search.substring(1)
+      q = window.location.hash.substring(1)
     while ((e = r.exec(q))) {
       hashParams[e[1]] = decodeURIComponent(e[2])
     }
-    console.log(hashParams.code)
+    console.log(`hashParams`, hashParams)
 
-    return hashParams.code
+    if (window.location.hash) {
+      this.setState({
+        isAuth: true
+      })
+      return hashParams
+    }
   }
 
-  getNowPlaying = async token => {
-    console.log(`token`, token)
-
-    // Make a call using the token
-    let success = $.ajax({
-      url: 'https://api.spotify.com/v1/me/player',
+  getSpotifyUser = async(token) => {
+    await $.ajax({
+      url: 'https://api.spotify.com/v1/me',
       type: 'GET',
       beforeSend: xhr => {
-        xhr.setRequestHeader(
-          'Authorization',
-          'Bearer ' +
-            'BQBkM-GIvi04_lzAhlicrVIV1cwOtmLv4Xd96dRDwVqiNaRL3N7LV-ncHeUuW756KZwgIggwzzR21lZ0hPtvxkFHNs571Gl9ciiWw2HAjuQhMoDj38p5v2msFFV2JZeVYbboriEKXQI03bxByM1oR6VqG3aZ_CVx&refresh_token=AQAMHrLCDMvSczSPTUrcRvuponMoronD9RFQVxtG7xoU5VnsDunVcqqKp4eSx1wgX5Bw3d3s9PKoK7TlVSil1P8k3RTIvf0y64ohCYizOYWk-s1R_CrZ_QCG64GpsIij9Lg'
-        )
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
       },
 
       success: data => {
+        // console.log(`data`, data.device.id)
+
         this.setState({
-          data: data.item,
-          //   item: data.item,
+          user: {
+            name: data.display_name,
+            image: data.email
+          }
+        })
+      }
+    })
+    console.log(`user data`, this.state.user)
+  }
+
+  getNowPlaying = token => {
+    console.log(`token`, token)
+
+    // Make a call using the token
+    $.ajax({
+      url: 'https://api.spotify.com/v1/me/player',
+      type: 'GET',
+      beforeSend: xhr => {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
+      },
+
+      success: data => {
+        console.log(`data`, data)
+        // console.log(`data`, data.device.id)
+
+        this.setState({
           nowPlaying: {
             name: data.item.name,
             image: data.item.album.images[0].url
@@ -54,7 +82,6 @@ export default class PlaySong extends Component {
         })
       }
     })
-    console.log(this.state.data)
   }
 
   render() {
