@@ -2,9 +2,6 @@ import { SET_SPOTIFY_TOKEN, LOG_OUT } from '../constants/constants'
 
 //? redux action returns an object
 export const setCurrentAuthUser = token => async dispatch => {
-  console.log(`token`, token)
-  console.log(`window.location`, window.location)
-
   dispatch({
     //? type = action's name
     type: SET_SPOTIFY_TOKEN,

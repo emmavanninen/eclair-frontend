@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { setCurrentAuthUser, getToken } from '../../redux/actions/actions'
+import { setCurrentAuthUser } from '../../redux/actions/actions'
 import store from '../../redux/store/store'
 
 class Login extends Component {
@@ -48,4 +48,4 @@ const mapStateToProps = state => ({
   auth: state.reducer
 })
 
-export default connect(mapStateToProps, { setCurrentAuthUser, getToken })(Login)
+export default connect(mapStateToProps, { setCurrentAuthUser })(Login)

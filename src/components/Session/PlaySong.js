@@ -2,12 +2,17 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import * as $ from 'jquery'
 import store from '../../redux/store/store'
+import { setCurrentAuthUser } from '../../redux/actions/actions'
+import { checkAuth } from '../api/setAuth'
 
 class PlaySong extends Component {
   state = {
+    playButton: false,
+    token: null,
+    isAuth: false,
     nowPlaying: {
-      name: 'unknown',
-      image: 'unknown'
+      name: null,
+      image: null
     },
     user: {
       name: '',
@@ -15,35 +20,27 @@ class PlaySong extends Component {
     }
   }
 
-  componentDidMount() {
-    //   this.getSpotifyUser()
-  }
+  componentDidMount = async () => {
+    const { setCurrentAuthUser } = this.props
+    let tokens = await checkAuth()
 
-  componentDidUpdate(prevProp, prevState) {
-    console.log('update poop')
-    console.log(prevProp)
-  }
+    if (tokens) {
+      let accessToken = JSON.parse(tokens)
+      console.log(`tokens`, accessToken)
 
-  getHashParams = async () => {
-    const hashParams = {}
-    let e,
-      r = /([^&;=]+)=?([^&;]*)/g,
-      q = window.location.hash.substring(1)
+      setCurrentAuthUser(accessToken)
 
-    while ((e = r.exec(q))) {
-      hashParams[e[1]] = await decodeURIComponent(e[2])
-    }
-    try {
-      if (window.location.hash) {
+      let states = store.getState()
+      console.log(`redux states`, states)
+
+      if (states.reducer.user.isAuth) {
         this.setState({
           isAuth: true,
-          token: hashParams
+          token: states.reducer.user.token
         })
-        // localStorage.setItem('spotifyToken', hashParams.access_token)
-        // console.log(`!`, this.state.token)
+        this.getSpotifyUser(states.reducer.user.token)
+        this.getNowPlaying(states.reducer.user.token)
       }
-    } catch (e) {
-      console.log(e)
     }
   }
 
@@ -56,8 +53,7 @@ class PlaySong extends Component {
   }
 
   logout = () => {
-    let poop = store.getState()
-    console.log(`poop`, poop)
+    // let poop = store.getState()
     // logout()
     // this.setState({
     //   nowPlaying: {
@@ -71,30 +67,26 @@ class PlaySong extends Component {
     // })
   }
 
-  getSpotifyUser = async () => {
-    let access_token = store.getState()
-    console.log(access_token)
+  getSpotifyUser = async token => {
+    await $.ajax({
+      url: 'https://api.spotify.com/v1/me',
+      type: 'GET',
+      beforeSend: xhr => {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
+      },
 
-    // await $.ajax({
-    //   url: 'https://api.spotify.com/v1/me',
-    //   type: 'GET',
-    //   beforeSend: xhr => {
-    //     xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
-    //   },
-
-    //   success: data => {
-    //     this.setState({
-    //       user: {
-    //         name: data.display_name,
-    //         image: data.email
-    //       }
-    //     })
-    //   }
-    // })
+      success: data => {
+        this.setState({
+          user: {
+            name: data.display_name,
+            image: data.email
+          }
+        })
+      }
+    })
   }
 
   getNowPlaying = token => {
-    // Make a call using the token
     $.ajax({
       url: 'https://api.spotify.com/v1/me/player',
       type: 'GET',
@@ -103,6 +95,8 @@ class PlaySong extends Component {
       },
 
       success: data => {
+        console.log(`user data`, data)
+
         if (data) {
           this.setState({
             nowPlaying: {
@@ -115,35 +109,105 @@ class PlaySong extends Component {
     })
   }
 
-  render() {
-    console.log(this.props)
-    const { isAuth } = this.state
+  playSong = token => {
+    $.ajax({
+      url: 'https://api.spotify.com/v1/me/player/play',
+      type: 'PUT',
+      beforeSend: xhr => {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
+      },
 
-    if (localStorage['spotifyToken']) {
-      console.log('update poop')
-    }
+      success: data => {
+        this.setState({
+          playButton: false
+        })
+      }
+    })
+  }
+  pauseSong = token => {
+    $.ajax({
+      url: 'https://api.spotify.com/v1/me/player/pause',
+      type: 'PUT',
+      beforeSend: xhr => {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
+      },
+
+      success: data => {
+        this.setState({
+          playButton: true
+        })
+      }
+    })
+  }
+
+  previousSong = token => {
+    $.ajax({
+      url: 'https://api.spotify.com/v1/me/player/previous',
+      type: 'POST',
+      beforeSend: xhr => {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
+      },
+
+      success: () => {
+        this.getNowPlaying(this.state.token)
+      }
+    })
+  }
+
+  nextSong = token => {
+    $.ajax({
+      url: 'https://api.spotify.com/v1/me/player/next',
+      type: 'POST',
+      beforeSend: xhr => {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
+      },
+
+      success: () => {
+        this.getNowPlaying(this.state.token)
+      }
+    })
+  }
+
+  render() {
+    const { isAuth } = this.state
 
     return (
       <>
-        {/* <a href='http://localhost:8888/'> */}
         <button onClick={this.loginWithSpotify}>Login with Spotify</button>
-        <button onClick={this.logout}>Logout</button>
-        {/* </a> */}
         {isAuth ? (
           <>
             <div>Hello {this.state.user.name}</div>
-            <div>You listening: {this.state.nowPlaying.name}</div>
-            <div>
-              <img
-                src={this.state.nowPlaying.image}
-                alt='album img'
-                style={{ width: '200px' }}
-              />
-            </div>
-            {/* <button onClick={this.logout}>Logout</button> */}
-            {/* <button onClick={() => this.getNowPlaying(this.getHashParams())}>
-              Check now playing
-            </button> */}
+            {this.state.nowPlaying.name ? (
+              <>
+                <div>You listening: {this.state.nowPlaying.name}</div>
+                <div>
+                  <img
+                    src={this.state.nowPlaying.image}
+                    alt='album img'
+                    style={{ width: '200px' }}
+                  />
+                </div>
+              </>
+            ) : (
+              <div>No song currently playing</div>
+            )}
+            <button onClick={this.logout}>Logout</button>
+            {this.state.playButton ? (
+              <button onClick={() => this.playSong(this.state.token)}>
+                Play
+              </button>
+            ) : (
+              <button onClick={() => this.pauseSong(this.state.token)}>
+                Pause
+              </button>
+            )}
+
+            <button onClick={() => this.previousSong(this.state.token)}>
+              Previous
+            </button>
+            <button onClick={() => this.nextSong(this.state.token)}>
+              Next
+            </button>
           </>
         ) : (
           ''
@@ -157,4 +221,4 @@ const mapStateToProps = state => ({
   auth: state.reducer
 })
 
-export default connect(mapStateToProps, null)(PlaySong)
+export default connect(mapStateToProps, { setCurrentAuthUser })(PlaySong)
