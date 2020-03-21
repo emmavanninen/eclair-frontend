@@ -7,7 +7,7 @@ import { checkAuth } from '../api/setAuth'
 
 class PlaySong extends Component {
   state = {
-    playButton: false,
+    isPlaying: false,
     token: null,
     isAuth: false,
     nowPlaying: {
@@ -18,9 +18,11 @@ class PlaySong extends Component {
       name: '',
       email: ''
     },
+    activeDevice: null,
     playlists: null,
     tracks: null,
-    activePlaylist: null
+    activePlaylist: null,
+    uris: []
   }
 
   componentDidMount = async () => {
@@ -84,17 +86,20 @@ class PlaySong extends Component {
         })
       }
     })
-    // await $.ajax({
-    //     url: 'https://api.spotify.com/v1/me/player/devices',
-    //   type: 'GET',
-    //   beforeSend: xhr => {
-    //     xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
-    //   },
 
-    //   success: data => {
-    //       console.log(`devide data`, data.devices[0].id);
-    //   }
-    // })
+    await $.ajax({
+      url: 'https://api.spotify.com/v1/me/player/devices',
+      type: 'GET',
+      beforeSend: xhr => {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
+      },
+
+      success: data => {
+        this.setState({
+          activeDevice: data.devices[0].id
+        })
+      }
+    })
   }
 
   getPlaylists = async token => {
@@ -145,7 +150,13 @@ class PlaySong extends Component {
       success: data => {
         let playlistTracks = data.items.map(track => {
           return (
-            <li key={track.track.id}>
+            <li
+              key={track.track.id}
+              uri={track.track.uri}
+              onClick={() => {
+                this.playNewSong(track.track.uri)
+              }}
+            >
               {track.track.name}
               <br />
               By: {track.track.artists[0].name}
@@ -165,12 +176,16 @@ class PlaySong extends Component {
       url: 'https://api.spotify.com/v1/me/player/currently-playing',
       type: 'GET',
       beforeSend: xhr => {
-        xhr.setRequestHeader('Authorization', 'Bearer ' + this.state.token.access_token)
+        xhr.setRequestHeader(
+          'Authorization',
+          'Bearer ' + this.state.token.access_token
+        )
       },
 
       success: data => {
         if (data) {
           this.setState({
+            isPlaying: data.is_playing,
             nowPlaying: {
               name: data.item.name,
               image: data.item.album.images[0].url
@@ -181,21 +196,20 @@ class PlaySong extends Component {
     })
   }
 
-  playNewSong = () => {
-    let token = this.state.token
-    let spotify_uri = 'spotify:track:5vNCK8yq3luCijCdmqr7S4'
-    //   let spotify_uri = "spotify:album:2Dw4fYqDQnxsgoXDdMbqh3"
+  playNewSong = uri => {
     $.ajax({
-      url:
-        'https://api.spotify.com/v1/me/player/play?device_id=b6ec0f5252c3e11c74b8be06f1caf28a551c7ccc',
-        data: JSON.stringify({ uris: [spotify_uri] }),
+      url: `https://api.spotify.com/v1/me/player/play?device_id=${this.state.activeDevice}`,
+      data: JSON.stringify({ uris: [uri] }),
       type: 'PUT',
       beforeSend: xhr => {
-        xhr.setRequestHeader('Authorization', 'Bearer ' + this.state.token.access_token)
+        xhr.setRequestHeader(
+          'Authorization',
+          'Bearer ' + this.state.token.access_token
+        )
       },
 
       success: data => {
-       this.getNowPlaying()
+        this.getNowPlaying()
       }
     })
   }
@@ -209,9 +223,7 @@ class PlaySong extends Component {
       },
 
       success: data => {
-        this.setState({
-          playButton: false
-        })
+        this.getNowPlaying()
       }
     })
   }
@@ -224,9 +236,7 @@ class PlaySong extends Component {
       },
 
       success: data => {
-        this.setState({
-          playButton: true
-        })
+        this.getNowPlaying()
       }
     })
   }
@@ -284,15 +294,14 @@ class PlaySong extends Component {
                     style={{ width: '200px' }}
                   />
                 </div>
-                <button onClick={this.playNewSong}>Play New Song</button>
                 <button onClick={this.logout}>Logout</button>
-                {this.state.playButton ? (
-                  <button onClick={() => this.playSong(this.state.token)}>
-                    Play
-                  </button>
-                ) : (
+                {this.state.isPlaying ? (
                   <button onClick={() => this.pauseSong(this.state.token)}>
                     Pause
+                  </button>
+                ) : (
+                  <button onClick={() => this.playSong(this.state.token)}>
+                    Play
                   </button>
                 )}
 
