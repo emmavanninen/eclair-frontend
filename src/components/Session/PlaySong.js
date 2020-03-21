@@ -17,7 +17,8 @@ class PlaySong extends Component {
     user: {
       name: '',
       email: ''
-    }
+    },
+    playlists: null
   }
 
   componentDidMount = async () => {
@@ -86,16 +87,36 @@ class PlaySong extends Component {
     })
   }
 
-  getNowPlaying = token => {
-    $.ajax({
-      url: 'https://api.spotify.com/v1/me/player',
+  getPlaylists = async token => {
+    await $.ajax({
+      url: `https://api.spotify.com/v1/users/nike-/playlists`,
       type: 'GET',
       beforeSend: xhr => {
         xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
       },
 
       success: data => {
-        console.log(`user data`, data)
+        console.log(`playlists`, data)
+        let playlists = data.items.map(playlist => {
+          return playlist.name
+        })
+        this.setState({
+          playlists: playlists
+        })
+      }
+    })
+  }
+
+  getNowPlaying = token => {
+    $.ajax({
+      url: 'https://api.spotify.com/v1/me/player/currently-playing',
+      type: 'GET',
+      beforeSend: xhr => {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
+      },
+
+      success: data => {
+        console.log(`song data`, data)
 
         if (data) {
           this.setState({
@@ -149,6 +170,9 @@ class PlaySong extends Component {
       },
 
       success: () => {
+        this.setState({
+          playButton: false
+        })
         this.getNowPlaying(this.state.token)
       }
     })
@@ -163,6 +187,9 @@ class PlaySong extends Component {
       },
 
       success: () => {
+        this.setState({
+          playButton: false
+        })
         this.getNowPlaying(this.state.token)
       }
     })
@@ -187,30 +214,45 @@ class PlaySong extends Component {
                     style={{ width: '200px' }}
                   />
                 </div>
+                <button onClick={this.logout}>Logout</button>
+                {this.state.playButton ? (
+                  <button onClick={() => this.playSong(this.state.token)}>
+                    Play
+                  </button>
+                ) : (
+                  <button onClick={() => this.pauseSong(this.state.token)}>
+                    Pause
+                  </button>
+                )}
+
+                <button onClick={() => this.previousSong(this.state.token)}>
+                  Previous
+                </button>
+                <button onClick={() => this.nextSong(this.state.token)}>
+                  Next
+                </button>
+                <button onClick={() => this.getPlaylists(this.state.token)}>
+                  Playlists
+                </button>
               </>
             ) : (
-              <div>No song currently playing</div>
+              ''
             )}
-            <button onClick={this.logout}>Logout</button>
-            {this.state.playButton ? (
-              <button onClick={() => this.playSong(this.state.token)}>
-                Play
-              </button>
+            {this.state.playlists ? (
+              <div>
+                Your playlists:
+                <ul>
+                  {this.state.playlists.map(playlist => (
+                    <li>{playlist}</li>
+                  ))}
+                </ul>
+              </div>
             ) : (
-              <button onClick={() => this.pauseSong(this.state.token)}>
-                Pause
-              </button>
+              ''
             )}
-
-            <button onClick={() => this.previousSong(this.state.token)}>
-              Previous
-            </button>
-            <button onClick={() => this.nextSong(this.state.token)}>
-              Next
-            </button>
           </>
         ) : (
-          ''
+          <div>No song currently playing</div>
         )}
       </>
     )
