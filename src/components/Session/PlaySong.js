@@ -19,7 +19,8 @@ class PlaySong extends Component {
       email: ''
     },
     playlists: null,
-    tracks: null
+    tracks: null,
+    activePlaylist: null
   }
 
   componentDidMount = async () => {
@@ -28,12 +29,9 @@ class PlaySong extends Component {
 
     if (tokens) {
       let accessToken = JSON.parse(tokens)
-      console.log(`tokens`, accessToken)
-
       setCurrentAuthUser(accessToken)
 
       let states = store.getState()
-      console.log(`redux states`, states)
 
       if (states.reducer.user.isAuth) {
         this.setState({
@@ -101,7 +99,7 @@ class PlaySong extends Component {
             <li
               key={playlist.id}
               onClick={() => {
-                this.getPlaylistTracks(playlist.id, this.state.token)
+                this.handlePlaylistOnClick(playlist.name, playlist.id)
               }}
             >
               {playlist.name}
@@ -115,7 +113,18 @@ class PlaySong extends Component {
     })
   }
 
-  getPlaylistTracks = async (playlistID, token) => {
+  handlePlaylistOnClick = (playlistName, playlistID) => {
+    if (this.state.activePlaylist === playlistName) {
+      this.setState({
+        tracks: null,
+        activePlaylist: null
+      })
+    } else {
+      this.getPlaylistTracks(playlistName, playlistID, this.state.token)
+    }
+  }
+
+  getPlaylistTracks = async (playlistName, playlistID, token) => {
     await $.ajax({
       url: `https://api.spotify.com/v1/playlists/${playlistID}/tracks`,
       type: 'GET',
@@ -123,7 +132,6 @@ class PlaySong extends Component {
         xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
       },
       success: data => {
-        console.log(`playlist tracks`, data.items)
         let playlistTracks = data.items.map(track => {
           return (
             <li>
@@ -134,7 +142,8 @@ class PlaySong extends Component {
           )
         })
         this.setState({
-          tracks: playlistTracks
+          tracks: playlistTracks,
+          activePlaylist: playlistName
         })
       }
     })
@@ -149,8 +158,6 @@ class PlaySong extends Component {
       },
 
       success: data => {
-        console.log(`song data`, data)
-
         if (data) {
           this.setState({
             nowPlaying: {
@@ -264,7 +271,15 @@ class PlaySong extends Component {
                 <button onClick={() => this.nextSong(this.state.token)}>
                   Next
                 </button>
-                <button onClick={() => this.getPlaylists(this.state.token)}>
+                <button
+                  onClick={() =>
+                    this.state.playlists
+                      ? this.setState({
+                          playlists: null
+                        })
+                      : this.getPlaylists(this.state.token)
+                  }
+                >
                   Playlists
                 </button>
               </>
