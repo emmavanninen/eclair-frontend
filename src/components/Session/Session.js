@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import PlaySong from './PlaySong'
+import SpotifyPlayer from './SpotifyPlayer'
 import { connect } from 'react-redux'
 import { setCurrentAuthUser } from '../../redux/actions/actions'
 import { checkAuth } from '../api/setAuth'
@@ -24,7 +24,7 @@ class Session extends Component {
 //   }
 
   render() {
-    return <PlaySong />
+      return <SpotifyPlayer />
   }
 }
 

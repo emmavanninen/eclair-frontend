@@ -6,6 +6,6 @@ export const checkAuth = () =>{
     }
 }
 
-// export const logout = () => {
-//   localStorage.removeItem('spotifyToken')
-// }
+export const logout = () => {
+  localStorage.removeItem('spotifyToken')
+}

@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 import * as $ from 'jquery'
 import store from '../../redux/store/store'
 import { setCurrentAuthUser } from '../../redux/actions/actions'
-import { checkAuth } from '../api/setAuth'
+import { checkAuth, logout } from '../api/setAuth'
 
-class PlaySong extends Component {
+class SpotifyPlayer extends Component {
   state = {
     isPlaying: false,
     token: null,
@@ -21,8 +21,7 @@ class PlaySong extends Component {
     activeDevice: null,
     playlists: null,
     tracks: null,
-    activePlaylist: null,
-    uris: []
+    activePlaylist: null
   }
 
   componentDidMount = async () => {
@@ -54,19 +53,37 @@ class PlaySong extends Component {
     )
   }
 
-  logout = () => {
-    // let poop = store.getState()
-    // logout()
-    // this.setState({
-    //   nowPlaying: {
-    //     name: 'unknown',
-    //     image: 'unknown'
-    //   },
-    //   user: {
-    //     name: '',
-    //     email: ''
-    //   }
-    // })
+  logout = async () => {
+    if (this.state.isPlaying) {
+      await $.ajax({
+        url: 'https://api.spotify.com/v1/me/player/pause',
+        type: 'PUT',
+        beforeSend: xhr => {
+          xhr.setRequestHeader(
+            'Authorization',
+            'Bearer ' + this.state.token.access_token
+          )
+        }
+      })
+    }
+    logout()
+    this.setState({
+      isPlaying: false,
+      token: null,
+      isAuth: false,
+      nowPlaying: {
+        name: null,
+        image: null
+      },
+      user: {
+        name: '',
+        email: ''
+      },
+      activeDevice: null,
+      playlists: null,
+      tracks: null,
+      activePlaylist: null
+    })
   }
 
   getSpotifyUser = async token => {
@@ -219,7 +236,10 @@ class PlaySong extends Component {
       url: 'https://api.spotify.com/v1/me/player/play',
       type: 'PUT',
       beforeSend: xhr => {
-        xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
+        xhr.setRequestHeader(
+          'Authorization',
+          'Bearer ' + this.state.token.access_token
+        )
       },
 
       success: data => {
@@ -227,12 +247,15 @@ class PlaySong extends Component {
       }
     })
   }
-  pauseSong = token => {
+  pauseSong = () => {
     $.ajax({
       url: 'https://api.spotify.com/v1/me/player/pause',
       type: 'PUT',
       beforeSend: xhr => {
-        xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
+        xhr.setRequestHeader(
+          'Authorization',
+          'Bearer ' + this.state.token.access_token
+        )
       },
 
       success: data => {
@@ -241,36 +264,42 @@ class PlaySong extends Component {
     })
   }
 
-  previousSong = token => {
+  previousSong = () => {
     $.ajax({
       url: 'https://api.spotify.com/v1/me/player/previous',
       type: 'POST',
       beforeSend: xhr => {
-        xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
+        xhr.setRequestHeader(
+          'Authorization',
+          'Bearer ' + this.state.token.access_token
+        )
       },
 
       success: () => {
         this.setState({
           playButton: false
         })
-        this.getNowPlaying(this.state.token)
+        this.getNowPlaying()
       }
     })
   }
 
-  nextSong = token => {
+  nextSong = () => {
     $.ajax({
       url: 'https://api.spotify.com/v1/me/player/next',
       type: 'POST',
       beforeSend: xhr => {
-        xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
+        xhr.setRequestHeader(
+          'Authorization',
+          'Bearer ' + this.state.token.access_token
+        )
       },
 
       success: () => {
         this.setState({
           playButton: false
         })
-        this.getNowPlaying(this.state.token)
+        this.getNowPlaying()
       }
     })
   }
@@ -280,10 +309,21 @@ class PlaySong extends Component {
 
     return (
       <>
-        <button onClick={this.loginWithSpotify}>Login with Spotify</button>
         {isAuth ? (
           <>
             <div>Hello {this.state.user.name}</div>
+            <button
+              onClick={() =>
+                this.state.playlists
+                  ? this.setState({
+                      playlists: null
+                    })
+                  : this.getPlaylists(this.state.token)
+              }
+            >
+              Playlists
+            </button>
+            <button onClick={this.logout}>Logout</button>
             {this.state.nowPlaying.name ? (
               <>
                 <div>You listening: {this.state.nowPlaying.name}</div>
@@ -294,34 +334,14 @@ class PlaySong extends Component {
                     style={{ width: '200px' }}
                   />
                 </div>
-                <button onClick={this.logout}>Logout</button>
                 {this.state.isPlaying ? (
-                  <button onClick={() => this.pauseSong(this.state.token)}>
-                    Pause
-                  </button>
+                  <button onClick={() => this.pauseSong()}>Pause</button>
                 ) : (
-                  <button onClick={() => this.playSong(this.state.token)}>
-                    Play
-                  </button>
+                  <button onClick={() => this.playSong()}>Play</button>
                 )}
 
-                <button onClick={() => this.previousSong(this.state.token)}>
-                  Previous
-                </button>
-                <button onClick={() => this.nextSong(this.state.token)}>
-                  Next
-                </button>
-                <button
-                  onClick={() =>
-                    this.state.playlists
-                      ? this.setState({
-                          playlists: null
-                        })
-                      : this.getPlaylists(this.state.token)
-                  }
-                >
-                  Playlists
-                </button>
+                <button onClick={() => this.previousSong()}>Previous</button>
+                <button onClick={() => this.nextSong()}>Next</button>
               </>
             ) : (
               ''
@@ -337,7 +357,10 @@ class PlaySong extends Component {
             )}
           </>
         ) : (
-          <div>No song currently playing</div>
+          <>
+            <div>You need to login:</div>
+            <button onClick={this.loginWithSpotify}>Login with Spotify</button>
+          </>
         )}
       </>
     )
@@ -348,4 +371,4 @@ const mapStateToProps = state => ({
   auth: state.reducer
 })
 
-export default connect(mapStateToProps, { setCurrentAuthUser })(PlaySong)
+export default connect(mapStateToProps, { setCurrentAuthUser })(SpotifyPlayer)
