@@ -18,7 +18,8 @@ class PlaySong extends Component {
       name: '',
       email: ''
     },
-    playlists: null
+    playlists: null,
+    tracks: null
   }
 
   componentDidMount = async () => {
@@ -89,19 +90,51 @@ class PlaySong extends Component {
 
   getPlaylists = async token => {
     await $.ajax({
-      url: `https://api.spotify.com/v1/users/nike-/playlists`,
+      url: `https://api.spotify.com/v1/users/${this.state.user.name}/playlists`,
       type: 'GET',
       beforeSend: xhr => {
         xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
       },
-
       success: data => {
-        console.log(`playlists`, data)
         let playlists = data.items.map(playlist => {
-          return playlist.name
+          return (
+            <li
+              key={playlist.id}
+              onClick={() => {
+                this.getPlaylistTracks(playlist.id, this.state.token)
+              }}
+            >
+              {playlist.name}
+            </li>
+          )
         })
         this.setState({
           playlists: playlists
+        })
+      }
+    })
+  }
+
+  getPlaylistTracks = async (playlistID, token) => {
+    await $.ajax({
+      url: `https://api.spotify.com/v1/playlists/${playlistID}/tracks`,
+      type: 'GET',
+      beforeSend: xhr => {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
+      },
+      success: data => {
+        console.log(`playlist tracks`, data.items)
+        let playlistTracks = data.items.map(track => {
+          return (
+            <li>
+              {track.track.name}
+              <br />
+              By: {track.track.artists[0].name}
+            </li>
+          )
+        })
+        this.setState({
+          tracks: playlistTracks
         })
       }
     })
@@ -241,11 +274,8 @@ class PlaySong extends Component {
             {this.state.playlists ? (
               <div>
                 Your playlists:
-                <ul>
-                  {this.state.playlists.map(playlist => (
-                    <li>{playlist}</li>
-                  ))}
-                </ul>
+                <ul>{this.state.playlists}</ul>
+                {this.state.tracks ? <ul>{this.state.tracks}</ul> : ''}
               </div>
             ) : (
               ''
