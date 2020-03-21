@@ -84,6 +84,17 @@ class PlaySong extends Component {
         })
       }
     })
+    // await $.ajax({
+    //     url: 'https://api.spotify.com/v1/me/player/devices',
+    //   type: 'GET',
+    //   beforeSend: xhr => {
+    //     xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
+    //   },
+
+    //   success: data => {
+    //       console.log(`devide data`, data.devices[0].id);
+    //   }
+    // })
   }
 
   getPlaylists = async token => {
@@ -134,7 +145,7 @@ class PlaySong extends Component {
       success: data => {
         let playlistTracks = data.items.map(track => {
           return (
-            <li>
+            <li key={track.track.id}>
               {track.track.name}
               <br />
               By: {track.track.artists[0].name}
@@ -149,12 +160,12 @@ class PlaySong extends Component {
     })
   }
 
-  getNowPlaying = token => {
+  getNowPlaying = () => {
     $.ajax({
       url: 'https://api.spotify.com/v1/me/player/currently-playing',
       type: 'GET',
       beforeSend: xhr => {
-        xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
+        xhr.setRequestHeader('Authorization', 'Bearer ' + this.state.token.access_token)
       },
 
       success: data => {
@@ -166,6 +177,25 @@ class PlaySong extends Component {
             }
           })
         }
+      }
+    })
+  }
+
+  playNewSong = () => {
+    let token = this.state.token
+    let spotify_uri = 'spotify:track:5vNCK8yq3luCijCdmqr7S4'
+    //   let spotify_uri = "spotify:album:2Dw4fYqDQnxsgoXDdMbqh3"
+    $.ajax({
+      url:
+        'https://api.spotify.com/v1/me/player/play?device_id=b6ec0f5252c3e11c74b8be06f1caf28a551c7ccc',
+        data: JSON.stringify({ uris: [spotify_uri] }),
+      type: 'PUT',
+      beforeSend: xhr => {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + this.state.token.access_token)
+      },
+
+      success: data => {
+       this.getNowPlaying()
       }
     })
   }
@@ -254,6 +284,7 @@ class PlaySong extends Component {
                     style={{ width: '200px' }}
                   />
                 </div>
+                <button onClick={this.playNewSong}>Play New Song</button>
                 <button onClick={this.logout}>Logout</button>
                 {this.state.playButton ? (
                   <button onClick={() => this.playSong(this.state.token)}>
