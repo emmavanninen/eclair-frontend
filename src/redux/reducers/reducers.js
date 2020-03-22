@@ -18,7 +18,13 @@ export default function(state = initialState, action) {
         }
       }
     case LOG_OUT:
-      return state
+      return {
+        ...state,
+        user: {
+          isAuth: false,
+          token: null
+        }
+      }
     default:
       return state
   }

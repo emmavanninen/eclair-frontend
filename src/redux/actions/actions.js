@@ -12,11 +12,14 @@ export const setCurrentAuthUser = token => async dispatch => {
 export const getToken = () => dispatch => {
   console.log('-----')
 }
-// export const logout = () => dispatch => {
-//   localStorage.removeItem('spotifyToken')
-//   //   setAxiosToken(false)
-//   dispatch(setCurrentAuthUser({}))
-// }
+
+export const logout = () => dispatch => {
+  localStorage.removeItem('spotifyToken')
+  //   setAxiosToken(false)
+  dispatch({
+    type: LOG_OUT
+  })
+}
 
 // export const clearCurrentAuth = () => {
 //   return {

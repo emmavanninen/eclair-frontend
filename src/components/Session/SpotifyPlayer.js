@@ -25,65 +25,20 @@ class SpotifyPlayer extends Component {
   }
 
   componentDidMount = async () => {
-    const { setCurrentAuthUser } = this.props
-    let tokens = await checkAuth()
+    let states = store.getState()
 
-    if (tokens) {
-      let accessToken = JSON.parse(tokens)
-      setCurrentAuthUser(accessToken)
-
-      let states = store.getState()
-
-      if (states.reducer.user.isAuth) {
-        this.setState({
-          isAuth: true,
-          token: states.reducer.user.token
-        })
-        this.getSpotifyUser(states.reducer.user.token)
-        this.getNowPlaying(states.reducer.user.token)
+    if (states.reducer.user.isAuth) {
+      await this.setState({
+        isAuth: true,
+        token: states.reducer.user.token
+      })
+      try {
+        this.getSpotifyUser(this.state.token)
+        this.getNowPlaying(this.state.token)
+      } catch (e) {
+        console.log(e)
       }
     }
-  }
-
-  loginWithSpotify = () => {
-    window.open(
-      'http://localhost:8888/',
-      'Login with Spotify',
-      'width=600,height=600'
-    )
-  }
-
-  logout = async () => {
-    if (this.state.isPlaying) {
-      await $.ajax({
-        url: 'https://api.spotify.com/v1/me/player/pause',
-        type: 'PUT',
-        beforeSend: xhr => {
-          xhr.setRequestHeader(
-            'Authorization',
-            'Bearer ' + this.state.token.access_token
-          )
-        }
-      })
-    }
-    logout()
-    this.setState({
-      isPlaying: false,
-      token: null,
-      isAuth: false,
-      nowPlaying: {
-        name: null,
-        image: null
-      },
-      user: {
-        name: '',
-        email: ''
-      },
-      activeDevice: null,
-      playlists: null,
-      tracks: null,
-      activePlaylist: null
-    })
   }
 
   getSpotifyUser = async token => {
@@ -112,6 +67,8 @@ class SpotifyPlayer extends Component {
       },
 
       success: data => {
+        //TODO: if no devices
+
         this.setState({
           activeDevice: data.devices[0].id
         })
@@ -309,58 +266,49 @@ class SpotifyPlayer extends Component {
 
     return (
       <>
-        {isAuth ? (
+        <div>Hello {this.state.user.name}</div>
+        <button
+          onClick={() =>
+            this.state.playlists
+              ? this.setState({
+                  playlists: null
+                })
+              : this.getPlaylists(this.state.token)
+          }
+        >
+          Playlists
+        </button>
+        {/* <button onClick={this.logout}>Logout</button> */}
+        {this.state.nowPlaying.name ? (
           <>
-            <div>Hello {this.state.user.name}</div>
-            <button
-              onClick={() =>
-                this.state.playlists
-                  ? this.setState({
-                      playlists: null
-                    })
-                  : this.getPlaylists(this.state.token)
-              }
-            >
-              Playlists
-            </button>
-            <button onClick={this.logout}>Logout</button>
-            {this.state.nowPlaying.name ? (
-              <>
-                <div>You listening: {this.state.nowPlaying.name}</div>
-                <div>
-                  <img
-                    src={this.state.nowPlaying.image}
-                    alt='album img'
-                    style={{ width: '200px' }}
-                  />
-                </div>
-                {this.state.isPlaying ? (
-                  <button onClick={() => this.pauseSong()}>Pause</button>
-                ) : (
-                  <button onClick={() => this.playSong()}>Play</button>
-                )}
+            <div>You listening: {this.state.nowPlaying.name}</div>
+            <div>
+              <img
+                src={this.state.nowPlaying.image}
+                alt='album img'
+                style={{ width: '200px' }}
+              />
+            </div>
+            {this.state.isPlaying ? (
+              <button onClick={() => this.pauseSong()}>Pause</button>
+            ) : (
+              <button onClick={() => this.playSong()}>Play</button>
+            )}
 
-                <button onClick={() => this.previousSong()}>Previous</button>
-                <button onClick={() => this.nextSong()}>Next</button>
-              </>
-            ) : (
-              ''
-            )}
-            {this.state.playlists ? (
-              <div>
-                Your playlists:
-                <ul>{this.state.playlists}</ul>
-                {this.state.tracks ? <ul>{this.state.tracks}</ul> : ''}
-              </div>
-            ) : (
-              ''
-            )}
+            <button onClick={() => this.previousSong()}>Previous</button>
+            <button onClick={() => this.nextSong()}>Next</button>
           </>
         ) : (
-          <>
-            <div>You need to login:</div>
-            <button onClick={this.loginWithSpotify}>Login with Spotify</button>
-          </>
+          ''
+        )}
+        {this.state.playlists ? (
+          <div>
+            Your playlists:
+            <ul>{this.state.playlists}</ul>
+            {this.state.tracks ? <ul>{this.state.tracks}</ul> : ''}
+          </div>
+        ) : (
+          ''
         )}
       </>
     )
