@@ -14,7 +14,8 @@ class Login extends Component {
     setCurrentAuthUser(tokens)
 
     let states = store.getState()
-    if (states.reducer.user.isAuth) {
+
+    if (states.reducer.userInfo.isAuth) {
       console.log(`redux states`, states)
       localStorage.setItem('spotifyToken', JSON.stringify(tokens))
     }

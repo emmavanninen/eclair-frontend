@@ -9,15 +9,12 @@ class SpotifyPlayer extends Component {
   state = {
     isPlaying: false,
     token: null,
-    isAuth: false,
+    isAuth: this.props.isAuth,
     nowPlaying: {
       name: null,
       image: null
     },
-    user: {
-      name: '',
-      email: ''
-    },
+    user: this.props.user,
     activeDevice: null,
     playlists: null,
     tracks: null,
@@ -25,15 +22,21 @@ class SpotifyPlayer extends Component {
   }
 
   componentDidMount = async () => {
-    let states = store.getState()
+    console.log(this.props)
 
-    if (states.reducer.user.isAuth) {
+    if (this.props.isAuth) {
+      let states = store.getState()
+      console.log(`states`, states)
+
       await this.setState({
-        isAuth: true,
-        token: states.reducer.user.token
+        token: states.reducer.userInfo.token,
+        user: {
+          name: states.reducer.userInfo.user.name,
+          email: states.reducer.userInfo.user.email
+        }
       })
       try {
-        this.getSpotifyUser(this.state.token)
+        this.getUserPlayLists(this.state.token)
         this.getNowPlaying(this.state.token)
       } catch (e) {
         console.log(e)
@@ -41,24 +44,7 @@ class SpotifyPlayer extends Component {
     }
   }
 
-  getSpotifyUser = async token => {
-    await $.ajax({
-      url: 'https://api.spotify.com/v1/me',
-      type: 'GET',
-      beforeSend: xhr => {
-        xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
-      },
-
-      success: data => {
-        this.setState({
-          user: {
-            name: data.display_name,
-            image: data.email
-          }
-        })
-      }
-    })
-
+  getUserPlayLists = async token => {
     await $.ajax({
       url: 'https://api.spotify.com/v1/me/player/devices',
       type: 'GET',
@@ -77,6 +63,8 @@ class SpotifyPlayer extends Component {
   }
 
   getPlaylists = async token => {
+    console.log(`?`, this.state.user)
+
     await $.ajax({
       url: `https://api.spotify.com/v1/users/${this.state.user.name}/playlists`,
       type: 'GET',
@@ -266,7 +254,7 @@ class SpotifyPlayer extends Component {
 
     return (
       <>
-        <div>Hello {this.state.user.name}</div>
+        {/* <div>Hello {this.state.user.name}</div> */}
         <button
           onClick={() =>
             this.state.playlists
@@ -305,7 +293,14 @@ class SpotifyPlayer extends Component {
           <div>
             Your playlists:
             <ul>{this.state.playlists}</ul>
-            {this.state.tracks ? <ul>{this.state.tracks}</ul> : ''}
+            {this.state.tracks ? (
+              <ul>
+                {this.state.tracks}
+                <button>ADD</button>
+              </ul>
+            ) : (
+              ''
+            )}
           </div>
         ) : (
           ''

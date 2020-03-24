@@ -4,7 +4,3 @@ export const checkAuth = () =>{
         return  tokens
     }
 }
-
-// export const logout = () => {
-//   localStorage.removeItem('spotifyToken')
-// }

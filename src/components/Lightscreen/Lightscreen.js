@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Fullscreen from 'react-full-screen'
+
 import './Lightscreen.css'
 
 class lightscreen extends Component {

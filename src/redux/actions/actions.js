@@ -1,16 +1,13 @@
-import { SET_SPOTIFY_TOKEN, LOG_OUT } from '../constants/constants'
+import { SET_SPOTIFY_TOKEN, LOG_OUT, TRACK_URIS } from '../constants/constants'
 
 //? redux action returns an object
-export const setCurrentAuthUser = token => async dispatch => {
+export const setCurrentAuthUser = (token, user) => async dispatch => {
   dispatch({
     //? type = action's name
     type: SET_SPOTIFY_TOKEN,
-    token: token
+    token: token,
+    user: user
   })
-}
-
-export const getToken = () => dispatch => {
-  console.log('-----')
 }
 
 export const logout = () => dispatch => {
@@ -20,9 +17,9 @@ export const logout = () => dispatch => {
     type: LOG_OUT
   })
 }
-
-// export const clearCurrentAuth = () => {
-//   return {
-//     type: LOG_OUT
-//   }
-// }
+export const setTrackUris = uris => dispatch => {
+  dispatch({
+    type: TRACK_URIS,
+    uris: uris
+  })
+}

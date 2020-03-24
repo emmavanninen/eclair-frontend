@@ -3,8 +3,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import Drawer from '@material-ui/core/Drawer'
 import List from '@material-ui/core/List'
 // import AnchorLink from 'react-anchor-link-smooth-scroll'
-import RegisterForm from './RegisterForm'
-import LoginForm from './LoginForm'
+// import RegisterForm from './RegisterForm'
+// import LoginForm from './LoginForm'
 import './Nav.css'
 
 const useStyles = makeStyles({
@@ -37,6 +37,14 @@ export default function Nav() {
     setState({ ...state, [side]: open })
   }
 
+  const loginWithSpotify = () => {
+    window.open(
+      'http://localhost:8888/',
+      'Login with Spotify',
+      'width=600,height=600'
+    )
+  }
+
   const navList = side => (
     <div
       className={classes.list}
@@ -54,16 +62,14 @@ export default function Nav() {
         </div>
         <ul className='nav-list'>
           <li>
-            <a href='http://localhost:8888/'>
-              <button>Login with Spotify</button>
-            </a>
+            <button onClick={()=>loginWithSpotify()}>Login with Spotify</button>
           </li>
-          <li>
+          {/* <li>
             <RegisterForm />
           </li>
           <li>
             <LoginForm />
-          </li>
+          </li> */}
         </ul>
       </List>
     </div>

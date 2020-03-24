@@ -1,9 +1,10 @@
-import { SET_SPOTIFY_TOKEN, LOG_OUT } from '../constants/constants'
+import { SET_SPOTIFY_TOKEN, LOG_OUT, TRACK_URIS } from '../constants/constants'
 
 const initialState = {
-  user: {
+  userInfo: {
     isAuth: null,
-    token: null
+    token: null,
+    user: null
   }
 }
 
@@ -12,18 +13,24 @@ export default function(state = initialState, action) {
     case SET_SPOTIFY_TOKEN:
       return {
         ...state,
-        user: {
+        userInfo: {
           isAuth: true,
-          token: action.token
+          token: action.token,
+          user: action.user
         }
       }
     case LOG_OUT:
       return {
         ...state,
-        user: {
+        userInfo: {
           isAuth: false,
           token: null
         }
+      }
+    case TRACK_URIS:
+      return {
+        ...state,
+        uris: action.uris
       }
     default:
       return state
