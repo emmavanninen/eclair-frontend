@@ -28,8 +28,12 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div class="appWindow">
+        <div class="visualizer">
+          <script src="p5/p5.js"></script>
+          <script src="p5/p5.sound.js"></script>
+          <script src="p5/main.js" class="x"></script>
+        </div>
       <div id="root"></div>
-      <div class="visualizer">test</div>
     </div>
     <!--
       This HTML file is a template.
@@ -44,12 +48,9 @@
   </body>
   <style>
     .appWindow {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-    }
-    .visualizer {
-      color: white;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
     }
   </style>
 </html>
