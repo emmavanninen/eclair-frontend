@@ -18,6 +18,7 @@ export const logout = () => dispatch => {
   })
 }
 export const setTrackUris = uris => dispatch => {
+    
   dispatch({
     type: TRACK_URIS,
     uris: uris
