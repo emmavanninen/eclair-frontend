@@ -19,7 +19,7 @@ class Login extends Component {
       console.log(`redux states`, states)
       localStorage.setItem('spotifyToken', JSON.stringify(tokens))
     }
-    window.opener.location.href = 'http://localhost:3000/ '
+      window.opener.location.href = 'http://ec2-3-88-232-14.compute-1.amazonaws.com/'
     window.close()
   }
 
