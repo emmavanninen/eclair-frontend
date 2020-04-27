@@ -39,7 +39,7 @@ export default function Nav() {
 
   const loginWithSpotify = () => {
     window.open(
-      '/spotify',
+      'http://localhost:8888',
       'Login with Spotify',
       'width=600,height=600'
     )

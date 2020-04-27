@@ -19,10 +19,9 @@ class Login extends Component {
       console.log(`redux states`, states)
       localStorage.setItem('spotifyToken', JSON.stringify(tokens))
     }
-      window.opener.location.href = 'http://ec2-3-88-232-14.compute-1.amazonaws.com/'
+    window.opener.location.href = 'http://localhost:3000'
     window.close()
   }
-
 
   getHashParams = async () => {
     const hashParams = {}
@@ -45,8 +44,8 @@ class Login extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  auth: state.reducer
+const mapStateToProps = (state) => ({
+  auth: state.reducer,
 })
 
 export default connect(mapStateToProps, { setCurrentAuthUser })(Login)
