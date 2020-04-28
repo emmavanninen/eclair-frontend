@@ -34,31 +34,38 @@ if (!document.fullscreenElement) {
   })
 }
 
+
+
+
+
 let mic
 let tune
 
 function preload() {
-//   tune = loadSound('alvanoto_U_07.mp4')
-    tune = loadSound('Vivaldi_The_Four_Seasons_Summer_in_G_Minor_IIIPresto.mp4')
+    tune = loadSound('alvanoto_U_07.mp4')
+//   tune = loadSound('Vivaldi_The_Four_Seasons_Summer_in_G_Minor_IIIPresto.mp4')
 }
 
 let micOrSound = ''
 
 function setup() {
-  let cnv = createCanvas(windowWidth, windowHeight - 30)
+  let cnv = createCanvas(windowWidth - 50, windowHeight - 80)
   cnv.style('display', 'block')
   angleMode(DEGREES)
   mic = new p5.AudioIn()
 
   fft = new p5.FFT(0.3, 1024)
 
+  
   // !! tune / mic
   //   fft.setInput()
 
-  let fullscreen = createButton('Fullscreen')
+  //   let fullscreen = createButton('Fullscreen')
+  //   fullscreen.mousePressed(fullscreenToggle)
   let buttonMic = createButton('Mic on/off')
   let buttonSound = createButton('Song on/off')
-  fullscreen.mousePressed(fullscreenToggle)
+  buttonMic.position(200, 50)
+  buttonSound.position(200, 100)
   buttonMic.mousePressed(toggleMic)
   buttonSound.mousePressed(toggleSound)
 }
@@ -70,14 +77,14 @@ function draw() {
   // console.log(fft.getEnergy("bass"))
 
   //! poles
-    stroke(50, 230, 200)
-    strokeWeight(2)
-    fill(255, 0, 255)
-    for (let i = 0; i < spectrum.length; i++) {
-      let x = map(i, 0, spectrum.length, 0, width)
-      let h = -height + map(spectrum[i], 0, 255, height, 0)
-      rect(x, height, width / spectrum.length, h)
-    }
+  stroke(50, 230, 200)
+//   strokeWeight(2)
+  fill(255, 0, 255)
+  for (let i = 0; i < spectrum.length; i++) {
+    let x = map(i, 0, spectrum.length, 0, width)
+    let h = -height + map(spectrum[i], 0, 255, height, 0)
+    rect(x, height, width / spectrum.length, h)
+  }
 
   //! hz
   // let bass, lowMid, mid, highMid, treble;

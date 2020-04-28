@@ -6,18 +6,35 @@
 }
 .closeicon img {
   height: 5vh;
+  filter: brightness(0.7);
+}
+.closeicon:hover img {
+  transition: 150ms ease-in-out;
+  filter: brightness(1);
+}
+.closeicon:active img {
+  transform: rotateY(180deg);
 }
 
 .menuicon {
   cursor: pointer;
   align-self: left;
 }
+
 .menuicon img {
   height: 7vh;
+  filter: brightness(0.7);
+}
+.menuicon:hover img {
+  height: 7.2vh;
+  transition: 150ms ease-in-out;
+  filter: brightness(1);
+}
+.menuicon:active img {
+  transform: rotateY(180deg);
 }
 
 .nav-items {
-  /* background-color: pink; */
   height: 97%;
   width: 100%;
   display: flex;
@@ -29,29 +46,57 @@
   height: 10%;
 }
 .session-login button {
+  padding-left: 2vmin;
+  padding-right: 2vmin;
+  padding-top: 1vmin;
+  padding-bottom: 1vmin;
+  cursor: pointer;
+  font-size: 13px;
+  text-transform: uppercase;
+  font-weight: 200;
+  margin: 2vmin;
   outline: none;
   background-color: rgb(22, 22, 22);
   color: white;
-  height: 30px;
-  border-radius: 5px;
+  height: fit-content;
+  border-radius: 15px;
   width: fit-content;
+  border: 1px solid rgba(0, 0, 0, 0.26);
+  box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.082),
+    -2px -2px 5px rgba(255, 255, 255, 0.082),
+    -2px 2px 5px rgba(255, 255, 255, 0.082),
+    2px -2px 5px rgba(255, 255, 255, 0.082);
 }
 
 .spotify {
   width: 92%;
-  height: 85vh;
+  height: 80vh;
   display: grid;
   grid-template-columns: 35% 65%;
   grid-template-rows: 100%;
   overflow: scroll;
 }
 .spotify button {
+  cursor: pointer;
+  font-size: 13px;
+  padding-left: 2vmin;
+  padding-right: 2vmin;
+  padding-top: 1vmin;
+  padding-bottom: 1vmin;
+  text-transform: uppercase;
+  font-weight: 200;
   outline: none;
+  margin: 1vmin;
   background-color: rgb(22, 22, 22);
   color: white;
-  height: 30px;
-  border-radius: 5px;
+  height: fit-content;
+  border-radius: 15px;
   width: fit-content;
+  border: 1px solid rgba(0, 0, 0, 0.26);
+  box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.082),
+    -2px -2px 5px rgba(255, 255, 255, 0.082),
+    -2px 2px 5px rgba(255, 255, 255, 0.082),
+    2px -2px 5px rgba(255, 255, 255, 0.082);
 }
 
 .player-btns {
@@ -61,12 +106,19 @@
 }
 
 .player-btns button {
-  width: 30px;
-  height: 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  cursor: pointer;
+  margin: 1vmin;
+  outline: none;
+  background-color: rgb(22, 22, 22);
+  color: white;
+  height: fit-content;
+  width: 50px;
+  border-radius: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.26);
+  box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.082),
+    -2px -2px 5px rgba(255, 255, 255, 0.082),
+    -2px 2px 5px rgba(255, 255, 255, 0.082),
+    2px -2px 5px rgba(255, 255, 255, 0.082);
 }
 
 .player-btns img {
@@ -83,6 +135,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-width: 250px;
   width: fit-content;
   text-align: center;
 }
@@ -116,6 +169,7 @@
   grid-row: 1;
   display: flex;
   flex-direction: row;
+  max-height: 80vh;
   overflow: scroll;
 }
 
@@ -128,16 +182,25 @@
 }
 
 .playlist {
+  color: rgb(197, 197, 197);
   font-size: 13px;
   text-transform: uppercase;
   cursor: pointer;
   margin-top: 1.2vmin;
   min-width: 15vw;
 }
+.playlist:hover {
+  color: white;
+}
 
 .playlist-song {
+  color: rgb(209, 209, 209);
   font-size: 12px;
   margin-top: 1vmin;
+  cursor: pointer;
+}
+.playlist-song:hover {
+  color: white;
 }
 
 .playlist-song span {

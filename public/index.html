@@ -37,9 +37,51 @@
     </div>
   </body>
   <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    button {
+      padding-left: 2vmin;
+      padding-right: 2vmin;
+      padding-top: 1vmin;
+      padding-bottom: 1vmin;
+      cursor: pointer;
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 300;
+      outline: none;
+      background-color: rgb(22, 22, 22);
+      color: white;
+      height: fit-content;
+      border-radius: 15px;
+      width: 120px;
+      border: 1px solid rgba(0, 0, 0, 0.26);
+      box-shadow: 2px 2px 5px rgba(255, 255, 255, 0.082),
+        -2px -2px 5px rgba(255, 255, 255, 0.082),
+        -2px 2px 5px rgba(255, 255, 255, 0.082),
+        2px -2px 5px rgba(255, 255, 255, 0.082);
+    }
+
+    button:hover {
+      background-color: rgb(32, 32, 32);
+      border: 1px solid rgba(168, 168, 168, 0.26);
+    }
+    button:active {
+      background-color: rgb(20, 20, 20);
+      border: 1px solid rgba(0, 0, 0, 0.26);
+      box-shadow: 2px 2px 5px rgba(105, 105, 105, 0.082),
+        -2px -2px 5px rgba(105, 105, 105, 0.082),
+        -2px 2px 5px rgba(105, 105, 105, 0.082),
+        2px -2px 5px rgba(105, 105, 105, 0.082);
+    }
+
     #root {
       width: 100vw;
-      position: absolute;
+      position: fixed;
+      left: 0;
     }
   </style>
 </html>

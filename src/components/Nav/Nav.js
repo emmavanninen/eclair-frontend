@@ -11,9 +11,7 @@ const useStyles = makeStyles({
     height: '100vh',
     color: 'white',
     backgroundColor: 'black',
-    border: '1px solid white',
-    backgroundRepeat: 'repeat',
-    backgroundSize: '100%',
+    border: '3px solid rgba(168, 168, 168, 0.26)',
   },
 })
 
@@ -21,7 +19,7 @@ export default function Nav() {
   const classes = useStyles()
   const [state, setState] = React.useState({
     //! false
-    left: false,
+    left: true,
   })
 
   const toggleDrawer = (side, open) => (event) => {

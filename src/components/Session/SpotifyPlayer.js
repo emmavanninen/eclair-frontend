@@ -314,6 +314,9 @@ class SpotifyPlayer extends Component {
             >
               Playlists
             </button>
+            <button>
+              Sessions
+            </button>
           </div>
           {this.state.nowPlaying.name ? (
             <div className='player'>
