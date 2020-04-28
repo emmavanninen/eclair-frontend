@@ -38,14 +38,14 @@ let mic
 let tune
 
 function preload() {
-    tune = loadSound('alvanoto_U_07.mp4')
-//   tune = loadSound('Vivaldi_The_Four_Seasons_Summer_in_G_Minor_IIIPresto.mp4')
+//   tune = loadSound('alvanoto_U_07.mp4')
+    tune = loadSound('Vivaldi_The_Four_Seasons_Summer_in_G_Minor_IIIPresto.mp4')
 }
 
 let micOrSound = ''
 
 function setup() {
-  let cnv = createCanvas(windowWidth, windowHeight)
+  let cnv = createCanvas(windowWidth, windowHeight - 30)
   cnv.style('display', 'block')
   angleMode(DEGREES)
   mic = new p5.AudioIn()
@@ -67,108 +67,106 @@ function draw() {
   background(10)
 
   let spectrum = fft.analyze(1024)
-    // console.log(fft.getEnergy("bass"))
+  // console.log(fft.getEnergy("bass"))
 
-
-    //!palkit
-//   stroke(50, 230, 200)
-//   strokeWeight(2)
-//   fill(255, 0, 255)
-//   for (let i = 0; i < spectrum.length; i++) {
-//     let x = map(i, 0, spectrum.length, 0, width)
-//     let h = -height + map(spectrum[i], 0, 255, height, 0)
-//     rect(x, height, width / spectrum.length, h)
-//   }
-
-
-    let bass, lowMid, mid, highMid, treble;
-
-    bass = fft.getEnergy("bass");
-    lowMid = fft.getEnergy("lowMid");
-    mid = fft.getEnergy("mid");
-    highMid = fft.getEnergy("highMid");
-    treble = fft.getEnergy("treble");
-
-    let bins = [bass, lowMid, mid, highMid, treble]
-
-    for (var i = 0; i < 5; i++) {
-        fill(i + 1 * (255 / 5) / 255, (i + 1) * (255 / 5), 0);
-        rect((i * width / 5) + 10, height / 2, 30, map(bins[i], 0, 255, 0, -height / 2));
-
+  //! poles
+    stroke(50, 230, 200)
+    strokeWeight(2)
+    fill(255, 0, 255)
+    for (let i = 0; i < spectrum.length; i++) {
+      let x = map(i, 0, spectrum.length, 0, width)
+      let h = -height + map(spectrum[i], 0, 255, height, 0)
+      rect(x, height, width / spectrum.length, h)
     }
 
-    beginShape();
-    stroke(0, 255, 0);
-    noFill();
-    // for (var i = 0; i < spectrum.length; i++) {
-    //   let x, y;
-    //   x = map(i, 0, spectrum.length - 1, 0, windowWidth);
-    //   y = map(spectrum[i], 0, 255, height / 2, 0);
-    //   vertex(x, y);
-    // }
-    endShape();
+  //! hz
+  // let bass, lowMid, mid, highMid, treble;
 
+  // bass = fft.getEnergy("bass");
+  // lowMid = fft.getEnergy("lowMid");
+  // mid = fft.getEnergy("mid");
+  // highMid = fft.getEnergy("highMid");
+  // treble = fft.getEnergy("treble");
+
+  // let bins = [bass, lowMid, mid, highMid, treble]
+
+  // for (var i = 0; i < 5; i++) {
+  //     fill(i + 1 * (255 / 5) / 255, (i + 1) * (255 / 5), 0);
+  //     rect((i * width / 5) + 10, height / 2, 30, map(bins[i], 0, 255, 0, -height / 2));
+
+  // }
+
+  // beginShape();
+  // stroke(0, 255, 0);
+  // noFill();
+  // // for (var i = 0; i < spectrum.length; i++) {
+  // //   let x, y;
+  // //   x = map(i, 0, spectrum.length - 1, 0, windowWidth);
+  // //   y = map(spectrum[i], 0, 255, height / 2, 0);
+  // //   vertex(x, y);
+  // // }
+  // endShape();
 
   let waveform = fft.waveform()
   noFill()
 
   //! round wave
   //? translate: shape to the middle
-//   translate(width / 2, height / 2)
-//   beginShape()
-//   stroke(250, 0, 250)
-//   for (let i = 0; i <= 360; i++) {
-//     let r = map(waveform[i], -1, 2, 0, height - 50)
-//     let x = r * cos(i + 50)
-//     let y = r * sin(i + 50)
-//     vertex(x, y)
-//   }
-//   endShape()
-//   beginShape()
-//   stroke(250, 0, 250)
-//   for (let i = 0; i <= 360; i++) {
-//     let r = map(waveform[i], -1, 2.01, 0, height - 50)
-//     let x = r * cos(i + 100)
-//     let y = r * sin(i + 100)
-//     vertex(x, y)
-//   }
-//   endShape()
-//   beginShape()
-//   stroke(250, 0, 250)
-//   for (let i = 0; i <= 360; i++) {
-//     let r = map(waveform[i], -1, 2.02, 0, height - 50)
-//     let x = r * cos(i + 200)
-//     let y = r * sin(i + 200)
-//     vertex(x, y)
-//   }
-//   endShape()
-//   beginShape()
-//   stroke(250, 0, 250)
-//   for (let i = 0; i <= 360; i++) {
-//     let r = map(waveform[i], -1, 2.03, 0, height - 50)
-//     let x = r * cos(i + 300)
-//     let y = r * sin(i + 300)
-//     vertex(x, y)
-//   }
-//   endShape()
-//   beginShape()
-//   stroke(250, 0, 250)
-//   for (let i = 0; i <= 360; i++) {
-//     let r = map(waveform[i], -1, 2.04, 0, height - 50)
-//     let x = r * cos(i + 500)
-//     let y = r * sin(i + 500)
-//     vertex(x, y)
-//   }
-//   endShape()
-//   beginShape()
-//   stroke(250, 0, 250)
-//   for (let i = 0; i <= 360; i++) {
-//     let r = map(waveform[i], -1, 2.05, 0, height - 50)
-//     let x = r * cos(i)
-//     let y = r * sin(i)
-//     vertex(x, y)
-//   }
-//   endShape()
+  translate(width / 2, height / 2)
+  beginShape()
+  stroke(250, 0, 250)
+  for (let i = 0; i <= 360; i++) {
+    let r = map(waveform[i], -1, 2, 0, height - 50)
+    let x = r * cos(i + 50)
+    let y = r * sin(i + 50)
+    vertex(x, y)
+  }
+  endShape()
+  beginShape()
+  stroke(250, 0, 250)
+  for (let i = 0; i <= 360; i++) {
+    let r = map(waveform[i], -1, 2.01, 0, height - 50)
+    let x = r * cos(i + 100)
+    let y = r * sin(i + 100)
+    vertex(x, y)
+  }
+  endShape()
+  beginShape()
+  stroke(250, 0, 250)
+  for (let i = 0; i <= 360; i++) {
+    let r = map(waveform[i], -1, 2.02, 0, height - 50)
+    let x = r * cos(i + 200)
+    let y = r * sin(i + 200)
+    vertex(x, y)
+  }
+  endShape()
+  beginShape()
+  stroke(250, 0, 250)
+  for (let i = 0; i <= 360; i++) {
+    let r = map(waveform[i], -1, 2.03, 0, height - 50)
+    let x = r * cos(i + 300)
+    let y = r * sin(i + 300)
+    vertex(x, y)
+  }
+  endShape()
+  beginShape()
+  stroke(250, 0, 250)
+  for (let i = 0; i <= 360; i++) {
+    let r = map(waveform[i], -1, 2.04, 0, height - 50)
+    let x = r * cos(i + 500)
+    let y = r * sin(i + 500)
+    vertex(x, y)
+  }
+  endShape()
+  beginShape()
+  stroke(250, 0, 250)
+  for (let i = 0; i <= 360; i++) {
+    let r = map(waveform[i], -1, 2.05, 0, height - 50)
+    let x = r * cos(i)
+    let y = r * sin(i)
+    vertex(x, y)
+  }
+  endShape()
 
   //! mid line wave
   // beginShape()

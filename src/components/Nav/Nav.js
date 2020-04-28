@@ -13,18 +13,18 @@ const useStyles = makeStyles({
     backgroundColor: 'black',
     border: '1px solid white',
     backgroundRepeat: 'repeat',
-    backgroundSize: '100%'
-  }
+    backgroundSize: '100%',
+  },
 })
 
 export default function Nav() {
   const classes = useStyles()
   const [state, setState] = React.useState({
-      //! false
-    left: true
+    //! false
+    left: false,
   })
 
-  const toggleDrawer = (side, open) => event => {
+  const toggleDrawer = (side, open) => (event) => {
     if (
       event.type === 'keydown' &&
       (event.key === 'Tab' || event.key === 'Shift')
@@ -35,15 +35,15 @@ export default function Nav() {
     setState({ ...state, [side]: open })
   }
 
-//   const loginWithSpotify = () => {
-//     window.open(
-//       'http://localhost:8888',
-//       'Login with Spotify',
-//       'width=600,height=600'
-//     )
-//   }
+  //   const loginWithSpotify = () => {
+  //     window.open(
+  //       'http://localhost:8888',
+  //       'Login with Spotify',
+  //       'width=600,height=600'
+  //     )
+  //   }
 
-  const navList = side => (
+  const navList = (side) => (
     <div
       className={classes.list}
       //   role='presentation'
@@ -58,10 +58,10 @@ export default function Nav() {
         >
           <img src='./close.png' alt='close menu icon'></img>
         </div>
-        
-            {/* <button onClick={()=>loginWithSpotify()}>Login with Spotify</button> */}
 
-        <Session/>
+        {/* <button onClick={()=>loginWithSpotify()}>Login with Spotify</button> */}
+
+        <Session />
       </List>
     </div>
   )

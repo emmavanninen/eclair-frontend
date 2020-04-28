@@ -68,14 +68,15 @@ class SpotifyPlayer extends Component {
         let playlists = data.items.map((playlist) => {
           return (
             <>
-              <li
+              <div
+              className='playlist'
                 key={playlist.id}
                 onClick={() => {
                   this.handlePlaylistOnClick(playlist.name, playlist.id)
                 }}
               >
                 {playlist.name}
-              </li>
+              </div>
             </>
           )
         })
@@ -117,7 +118,8 @@ class SpotifyPlayer extends Component {
           uris.push(track.track.uri)
           return (
             <>
-              <li
+              <div
+                className='playlist-song'
                 key={track.track.id}
                 uri={track.track.uri}
                 onClick={() => {
@@ -125,9 +127,8 @@ class SpotifyPlayer extends Component {
                 }}
               >
                 {track.track.name}
-                <br />
-                By: {track.track.artists[0].name}
-              </li>
+                <span> | By: {track.track.artists[0].name}</span>
+              </div>
             </>
           )
         })
@@ -315,33 +316,44 @@ class SpotifyPlayer extends Component {
             </button>
           </div>
           {this.state.nowPlaying.name ? (
-            <>
-              <div>
-                You listening: {this.state.nowPlaying.name}
+            <div className='player'>
+              <div className='player-title'>
+                You are listening:
                 <br />
-                By: {this.state.nowPlaying.artist}
+                <br />
+                {this.state.nowPlaying.name}
+                <br />
+                <span> | By: {this.state.nowPlaying.artist}</span>
               </div>
               <div>
                 <img
                   src={this.state.nowPlaying.image}
                   alt='album img'
-                  style={{ width: '200px' }}
+                  style={{ width: '100%', height: 'auto' }}
                 />
               </div>
               <div className='player-btns'>
                 {this.state.isPlaying ? (
                   <>
                     {/* <button onClick={this.getHZ}>get hz</button> */}
-                    <button onClick={() => this.pauseSong()}>Pause</button>
+                    <button onClick={() => this.pauseSong()}>
+                      <img src='./pause.png' alt='player icon'></img>
+                    </button>
                   </>
                 ) : (
-                  <button onClick={() => this.playSong()}>Play</button>
+                  <button onClick={() => this.playSong()}>
+                    <img src='./play.png' alt='player icon'></img>
+                  </button>
                 )}
 
-                <button onClick={() => this.previousSong()}>Previous</button>
-                <button onClick={() => this.nextSong()}>Next</button>
+                <button onClick={() => this.previousSong()}>
+                  <img src='./prev.png' alt='player icon'></img>
+                </button>
+                <button onClick={() => this.nextSong()}>
+                  <img src='./next.png' alt='player icon'></img>
+                </button>
               </div>
-            </>
+            </div>
           ) : (
             ''
           )}
@@ -358,7 +370,7 @@ class SpotifyPlayer extends Component {
                     : this.getPlaylists(this.state.token)
                 }
               >
-                Close Playlists
+                x
               </button>
               <ul>{this.state.playlists}</ul>
               {this.state.tracks ? (
