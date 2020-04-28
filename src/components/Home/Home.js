@@ -3,6 +3,7 @@ import Session from '../Session/Session'
 
 export default class Home extends Component {
   render() {
-    return <Session />
+    return <div></div>
+    // <Session />
   }
 }

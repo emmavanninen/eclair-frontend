@@ -1,12 +1,27 @@
-.closeMenu {
-  text-align: center;
+.closeicon {
+  padding: 4vmin;
+  text-align: right;
   cursor: pointer;
+}
+.closeicon img {
+  height: 5vh;
 }
 
 .menuicon {
-  padding: 5vh;
-  height: fit-content;
+  cursor: pointer;
 }
 .menuicon img {
-  height: 10vh;
+  height: 7vh;
 }
+
+.nav-items {
+  background-color: pink;
+  height: 97%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  /* align-items: center; */
+}
+
+

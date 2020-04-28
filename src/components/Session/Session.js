@@ -102,9 +102,6 @@ class Session extends Component {
       <>
         <div>Hello {this.state.user.name}</div>
         <button onClick={this.logout}>Logout</button>
-        {/* <button onClick={() => this.newSession(this.state.user)}>
-          Create new session
-        </button> */}
         {this.state.player}
       </>
     ) : (
