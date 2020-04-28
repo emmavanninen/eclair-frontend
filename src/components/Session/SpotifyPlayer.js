@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import * as $ from 'jquery'
 import store from '../../redux/store/store'
 import { setCurrentAuthUser, setTrackUris } from '../../redux/actions/actions'
-import { checkAuth, logout } from '../api/setAuth'
 
 class SpotifyPlayer extends Component {
   state = {
@@ -12,14 +11,14 @@ class SpotifyPlayer extends Component {
     isAuth: this.props.isAuth,
     nowPlaying: {
       name: null,
-      image: null
+      image: null,
     },
     user: this.props.user,
     activeDevice: null,
     playlists: null,
     tracks: null,
     activePlaylist: null,
-    uris: []
+    uris: [],
   }
 
   componentDidMount = async () => {
@@ -29,8 +28,8 @@ class SpotifyPlayer extends Component {
         token: states.reducer.userInfo.token,
         user: {
           name: states.reducer.userInfo.user.name,
-          email: states.reducer.userInfo.user.email
-        }
+          email: states.reducer.userInfo.user.email,
+        },
       })
       try {
         this.getUserPlayLists(this.state.token)
@@ -41,32 +40,32 @@ class SpotifyPlayer extends Component {
     }
   }
 
-  getUserPlayLists = async token => {
+  getUserPlayLists = async (token) => {
     await $.ajax({
       url: 'https://api.spotify.com/v1/me/player/devices',
       type: 'GET',
-      beforeSend: xhr => {
+      beforeSend: (xhr) => {
         xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
       },
 
-      success: data => {
+      success: (data) => {
         //TODO: if no devices
         this.setState({
-          activeDevice: data.devices[0].id
+          activeDevice: data.devices[0].id,
         })
-      }
+      },
     })
   }
 
-  getPlaylists = async token => {
+  getPlaylists = async (token) => {
     await $.ajax({
       url: `https://api.spotify.com/v1/users/${this.state.user.name}/playlists`,
       type: 'GET',
-      beforeSend: xhr => {
+      beforeSend: (xhr) => {
         xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
       },
-      success: data => {
-        let playlists = data.items.map(playlist => {
+      success: (data) => {
+        let playlists = data.items.map((playlist) => {
           return (
             <>
               <li
@@ -81,9 +80,9 @@ class SpotifyPlayer extends Component {
           )
         })
         this.setState({
-          playlists: playlists
+          playlists: playlists,
         })
-      }
+      },
     })
   }
 
@@ -91,16 +90,16 @@ class SpotifyPlayer extends Component {
     if (this.state.activePlaylist === playlistName) {
       this.setState({
         tracks: null,
-        activePlaylist: null
+        activePlaylist: null,
       })
     } else {
       this.getPlaylistTracks(playlistName, playlistID, this.state.token)
     }
   }
 
-  addTrackUri = uri => {
+  addTrackUri = (uri) => {
     this.setState({
-      uris: [...this.state.uris, uri]
+      uris: [...this.state.uris, uri],
     })
   }
 
@@ -108,13 +107,13 @@ class SpotifyPlayer extends Component {
     await $.ajax({
       url: `https://api.spotify.com/v1/playlists/${playlistID}/tracks`,
       type: 'GET',
-      beforeSend: xhr => {
+      beforeSend: (xhr) => {
         xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
       },
-      success: data => {
+      success: (data) => {
         let uris = []
 
-        let playlistTracks = data.items.map(track => {
+        let playlistTracks = data.items.map((track) => {
           uris.push(track.track.uri)
           return (
             <>
@@ -135,9 +134,9 @@ class SpotifyPlayer extends Component {
         this.setState({
           uris: uris,
           tracks: playlistTracks,
-          activePlaylist: playlistName
+          activePlaylist: playlistName,
         })
-      }
+      },
     })
   }
 
@@ -145,29 +144,29 @@ class SpotifyPlayer extends Component {
     $.ajax({
       url: 'https://api.spotify.com/v1/me/player/currently-playing',
       type: 'GET',
-      beforeSend: xhr => {
+      beforeSend: (xhr) => {
         xhr.setRequestHeader(
           'Authorization',
           'Bearer ' + this.state.token.access_token
         )
       },
 
-      success: data => {
+      success: (data) => {
         if (data) {
           this.setState({
             isPlaying: data.is_playing,
             nowPlaying: {
               name: data.item.name,
               artist: data.item.artists[0].name,
-              image: data.item.album.images[0].url
-            }
+              image: data.item.album.images[0].url,
+            },
           })
         }
-      }
+      },
     })
   }
 
-  playNewSong = uri => {
+  playNewSong = (uri) => {
     let uris = []
 
     if (this.state.uris) {
@@ -189,16 +188,16 @@ class SpotifyPlayer extends Component {
       url: `https://api.spotify.com/v1/me/player/play?device_id=${this.state.activeDevice}`,
       data: JSON.stringify({ uris: uris }),
       type: 'PUT',
-      beforeSend: xhr => {
+      beforeSend: (xhr) => {
         xhr.setRequestHeader(
           'Authorization',
           'Bearer ' + this.state.token.access_token
         )
       },
 
-      success: data => {
+      success: (data) => {
         this.getNowPlaying()
-      }
+      },
     })
   }
 
@@ -210,50 +209,50 @@ class SpotifyPlayer extends Component {
       console.log(states)
 
       this.setState({
-        uris: []
+        uris: [],
       })
     } catch (e) {
       console.log(e)
     }
   }
 
-//   getHZ = () => {
-//     let audioCtx = new AudioContext()
-//     let analyser = audioCtx.createAnalyser()
-//     let dataArray = new Float32Array(analyser.frequencyBinCount)
-//     console.log(analyser.getFloatFrequencyData(dataArray))
-//   }
+  //   getHZ = () => {
+  //     let audioCtx = new AudioContext()
+  //     let analyser = audioCtx.createAnalyser()
+  //     let dataArray = new Float32Array(analyser.frequencyBinCount)
+  //     console.log(analyser.getFloatFrequencyData(dataArray))
+  //   }
 
-  playSong = token => {
+  playSong = (token) => {
     $.ajax({
       url: 'https://api.spotify.com/v1/me/player/play',
       type: 'PUT',
-      beforeSend: xhr => {
+      beforeSend: (xhr) => {
         xhr.setRequestHeader(
           'Authorization',
           'Bearer ' + this.state.token.access_token
         )
       },
 
-      success: data => {
+      success: (data) => {
         this.getNowPlaying()
-      }
+      },
     })
   }
   pauseSong = () => {
     $.ajax({
       url: 'https://api.spotify.com/v1/me/player/pause',
       type: 'PUT',
-      beforeSend: xhr => {
+      beforeSend: (xhr) => {
         xhr.setRequestHeader(
           'Authorization',
           'Bearer ' + this.state.token.access_token
         )
       },
 
-      success: data => {
+      success: (data) => {
         this.getNowPlaying()
-      }
+      },
     })
   }
 
@@ -261,7 +260,7 @@ class SpotifyPlayer extends Component {
     $.ajax({
       url: 'https://api.spotify.com/v1/me/player/previous',
       type: 'POST',
-      beforeSend: xhr => {
+      beforeSend: (xhr) => {
         xhr.setRequestHeader(
           'Authorization',
           'Bearer ' + this.state.token.access_token
@@ -270,10 +269,10 @@ class SpotifyPlayer extends Component {
 
       success: () => {
         this.setState({
-          playButton: false
+          playButton: false,
         })
         this.getNowPlaying()
-      }
+      },
     })
   }
 
@@ -281,7 +280,7 @@ class SpotifyPlayer extends Component {
     $.ajax({
       url: 'https://api.spotify.com/v1/me/player/next',
       type: 'POST',
-      beforeSend: xhr => {
+      beforeSend: (xhr) => {
         xhr.setRequestHeader(
           'Authorization',
           'Bearer ' + this.state.token.access_token
@@ -290,85 +289,102 @@ class SpotifyPlayer extends Component {
 
       success: () => {
         this.setState({
-          playButton: false
+          playButton: false,
         })
         this.getNowPlaying()
-      }
+      },
     })
   }
 
   render() {
-    const { isAuth } = this.state
-
     return (
-      <>
-        <br />
-        <button
-          onClick={() =>
-            this.state.playlists
-              ? this.setState({
-                  playlists: null
-                })
-              : this.getPlaylists(this.state.token)
-          }
-        >
-          Playlists
-        </button>
-        {this.state.nowPlaying.name ? (
-          <>
-            <div>
-              You listening: {this.state.nowPlaying.name}
-              <br />
-              By: {this.state.nowPlaying.artist}
-            </div>
-            <div>
-              <img
-                src={this.state.nowPlaying.image}
-                alt='album img'
-                style={{ width: '200px' }}
-              />
-            </div>
-            {this.state.isPlaying ? (
-              <>
-                {/* <button onClick={this.getHZ}>get hz</button> */}
-                <button onClick={() => this.pauseSong()}>Pause</button>
-              </>
-            ) : (
-              <button onClick={() => this.playSong()}>Play</button>
-            )}
-
-            <button onClick={() => this.previousSong()}>Previous</button>
-            <button onClick={() => this.nextSong()}>Next</button>
-          </>
-        ) : (
-          ''
-        )}
-        {this.state.playlists ? (
-          <div>
-            Your playlists:
-            <ul>{this.state.playlists}</ul>
-            {this.state.tracks ? (
-              <ul>
-                {' '}
-                <button onClick={this.updateSession}>
-                  Create a new session with playlist {this.state.activePlaylist}
-                </button>
-                {this.state.tracks}
-              </ul>
-            ) : (
-              ''
-            )}
+      <div className='spotify'>
+        <div className='spotify-listening'>
+          <div className='spotify-user-info'>
+            <div>Hello {this.state.user.name}</div>
+            <button
+              onClick={() =>
+                this.state.playlists
+                  ? this.setState({
+                      playlists: null,
+                    })
+                  : this.getPlaylists(this.state.token)
+              }
+            >
+              Playlists
+            </button>
           </div>
-        ) : (
-          ''
-        )}
-      </>
+          {this.state.nowPlaying.name ? (
+            <>
+              <div>
+                You listening: {this.state.nowPlaying.name}
+                <br />
+                By: {this.state.nowPlaying.artist}
+              </div>
+              <div>
+                <img
+                  src={this.state.nowPlaying.image}
+                  alt='album img'
+                  style={{ width: '200px' }}
+                />
+              </div>
+              <div className='player-btns'>
+                {this.state.isPlaying ? (
+                  <>
+                    {/* <button onClick={this.getHZ}>get hz</button> */}
+                    <button onClick={() => this.pauseSong()}>Pause</button>
+                  </>
+                ) : (
+                  <button onClick={() => this.playSong()}>Play</button>
+                )}
+
+                <button onClick={() => this.previousSong()}>Previous</button>
+                <button onClick={() => this.nextSong()}>Next</button>
+              </div>
+            </>
+          ) : (
+            ''
+          )}
+        </div>
+        <div className='spotify-playlists'>
+          {this.state.playlists ? (
+            <>
+              <button
+                onClick={() =>
+                  this.state.playlists
+                    ? this.setState({
+                        playlists: null,
+                      })
+                    : this.getPlaylists(this.state.token)
+                }
+              >
+                Close Playlists
+              </button>
+              <ul>{this.state.playlists}</ul>
+              {this.state.tracks ? (
+                <ul className='spotify-playlist-songs'>
+                  {' '}
+                  {/* <button onClick={this.updateSession}>
+                    Create a new session with playlist{' '}
+                    {this.state.activePlaylist}
+                  </button> */}
+                  {this.state.tracks}
+                </ul>
+              ) : (
+                ''
+              )}
+            </>
+          ) : (
+            ''
+          )}
+        </div>
+      </div>
     )
   }
 }
 
-const mapStateToProps = state => ({
-  auth: state.reducer
+const mapStateToProps = (state) => ({
+  auth: state.reducer,
 })
 
 export default connect(mapStateToProps, { setCurrentAuthUser, setTrackUris })(

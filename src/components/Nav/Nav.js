@@ -35,13 +35,13 @@ export default function Nav() {
     setState({ ...state, [side]: open })
   }
 
-  const loginWithSpotify = () => {
-    window.open(
-      'http://localhost:8888',
-      'Login with Spotify',
-      'width=600,height=600'
-    )
-  }
+//   const loginWithSpotify = () => {
+//     window.open(
+//       'http://localhost:8888',
+//       'Login with Spotify',
+//       'width=600,height=600'
+//     )
+//   }
 
   const navList = side => (
     <div
@@ -58,11 +58,9 @@ export default function Nav() {
         >
           <img src='./close.png' alt='close menu icon'></img>
         </div>
-        <ul className='nav-list'>
-          <li>
-            <button onClick={()=>loginWithSpotify()}>Login with Spotify</button>
-          </li>
-        </ul>
+        
+            {/* <button onClick={()=>loginWithSpotify()}>Login with Spotify</button> */}
+
         <Session/>
       </List>
     </div>

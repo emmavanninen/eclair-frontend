@@ -1,5 +1,6 @@
 .closeicon {
-  padding: 4vmin;
+  padding-top: 2vmin;
+  padding-right: 4vmin;
   text-align: right;
   cursor: pointer;
 }
@@ -15,13 +16,66 @@
 }
 
 .nav-items {
-  background-color: pink;
+  /* background-color: pink; */
   height: 97%;
   width: 100%;
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
-  /* align-items: center; */
 }
 
+.session-login {
+  /* background-color: darkcyan; */
+}
 
+.spotify {
+  width: 90%;
+  height: 90vh;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 100%;
+  overflow: scroll;
+}
+.spotify button {
+  outline: none;
+  background-color: rgb(22, 22, 22);
+  color: white;
+  height: 30px;
+  border-radius: 5px;
+  width: fit-content;
+}
+
+.player-btns {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.spotify-listening {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: fit-content;
+  text-align: center;
+}
+
+.spotify-user-info {
+  text-align: left;
+  position: absolute;
+  top: 17vh;
+  line-height: 5vmin;
+}
+
+.spotify-playlists {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  flex-direction: row;
+  overflow: scroll;
+}
+
+.spotify-playlist-songs {
+  overflow: scroll;
+}
