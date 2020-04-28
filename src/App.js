@@ -21,7 +21,7 @@ export default class App extends Component {
               <MainRouter />
             </React.Suspense>
           </Router>
-          <Lightscreen />
+          {/* <Lightscreen /> */}
           {/* <Nav />
         <Home /> */}
         </Provider>

@@ -5,10 +5,10 @@ import * as $ from 'jquery'
 import {
   setCurrentAuthUser,
   logout,
-  setTrackUris
+  setTrackUris,
 } from '../../redux/actions/actions'
 import { checkAuth } from '../api/setAuth'
-import { createNewSession } from '../api/axios'
+// import { createNewSession } from '../api/axios'
 import store from '../../redux/store/store'
 
 class Session extends Component {
@@ -17,8 +17,8 @@ class Session extends Component {
     isAuth: false,
     user: {
       name: null,
-      email: null
-    }
+      email: null,
+    },
   }
 
   componentDidMount = async () => {
@@ -42,11 +42,11 @@ class Session extends Component {
                 isAuth={this.state.isAuth}
                 token={this.state.token}
               />
-            )
+            ),
           })
         } else {
           this.setState({
-            isAuth: false
+            isAuth: false,
           })
         }
       } catch (e) {
@@ -55,24 +55,32 @@ class Session extends Component {
     }
   }
 
-  getSpotifyUser = async token => {
+  getSpotifyUser = async (token) => {
     await $.ajax({
       url: 'https://api.spotify.com/v1/me',
       type: 'GET',
-      beforeSend: xhr => {
+      beforeSend: (xhr) => {
         xhr.setRequestHeader('Authorization', 'Bearer ' + token.access_token)
       },
 
-      success: data => {
+      success: (data) => {
         this.setState({
           isAuth: true,
           user: {
             name: data.display_name,
-            email: data.email
-          }
+            email: data.email,
+          },
         })
-      }
+      },
     })
+  }
+
+  loginWithSpotify = () => {
+    window.open(
+      'http://localhost:8888',
+      'Login with Spotify',
+      'width=600,height=600'
+    )
   }
 
   logout = () => {
@@ -80,11 +88,11 @@ class Session extends Component {
     const { logout } = this.props
     logout()
     this.setState({
-      isAuth: false
+      isAuth: false,
     })
   }
 
-  newSession = async user => {
+  newSession = async (user) => {
     let states = store.getState()
 
     console.log(`states.uris`, states.uris)
@@ -98,29 +106,32 @@ class Session extends Component {
   }
 
   render() {
-    return this.state.isAuth ? (
-      <>
-        <div>Hello {this.state.user.name}</div>
-        <button onClick={this.logout}>Logout</button>
-        {/* <button onClick={() => this.newSession(this.state.user)}>
-          Create new session
-        </button> */}
-        {this.state.player}
-      </>
-    ) : (
-      <>
-        <div>You need to login:</div>
-      </>
+    return (
+      <div className='session-login'>
+        {this.state.isAuth ? (
+          <>
+            <button onClick={this.logout}>Logout</button>
+            {this.state.player}
+          </>
+        ) : (
+          <>
+            <div>You need to login:</div>
+            <button onClick={() => this.loginWithSpotify()}>
+              Login with Spotify
+            </button>
+          </>
+        )}
+      </div>
     )
   }
 }
 
-const mapStateToProps = state => ({
-  auth: state.reducer
+const mapStateToProps = (state) => ({
+  auth: state.reducer,
 })
 
 export default connect(mapStateToProps, {
   setCurrentAuthUser,
   logout,
-  setTrackUris
+  setTrackUris,
 })(Session)

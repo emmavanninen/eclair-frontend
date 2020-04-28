@@ -2,31 +2,27 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Drawer from '@material-ui/core/Drawer'
 import List from '@material-ui/core/List'
-// import AnchorLink from 'react-anchor-link-smooth-scroll'
-// import RegisterForm from './RegisterForm'
-// import LoginForm from './LoginForm'
 import './Nav.css'
+import Session from '../Session/Session'
 
 const useStyles = makeStyles({
   list: {
-    width: '20vw',
+    width: '95vw',
     height: '100vh',
     color: 'white',
     backgroundColor: 'black',
-    border: '1px solid white',
-    backgroundImage: 'url(/binaryEmmaVanninen.png)',
-    backgroundRepeat: 'repeat',
-    backgroundSize: '100%'
-  }
+    border: '3px solid rgba(168, 168, 168, 0.26)',
+  },
 })
 
 export default function Nav() {
   const classes = useStyles()
   const [state, setState] = React.useState({
-    left: false
+    //! false
+    left: true,
   })
 
-  const toggleDrawer = (side, open) => event => {
+  const toggleDrawer = (side, open) => (event) => {
     if (
       event.type === 'keydown' &&
       (event.key === 'Tab' || event.key === 'Shift')
@@ -37,40 +33,33 @@ export default function Nav() {
     setState({ ...state, [side]: open })
   }
 
-  const loginWithSpotify = () => {
-    window.open(
-      'http://localhost:8888',
-      'Login with Spotify',
-      'width=600,height=600'
-    )
-  }
+  //   const loginWithSpotify = () => {
+  //     window.open(
+  //       'http://localhost:8888',
+  //       'Login with Spotify',
+  //       'width=600,height=600'
+  //     )
+  //   }
 
-  const navList = side => (
+  const navList = (side) => (
     <div
       className={classes.list}
       //   role='presentation'
       //   onClick={toggleDrawer(side, false)}
       //   onKeyDown={toggleDrawer(side, false)}
     >
-      <List>
+      <List className='nav-items'>
         <div
-          className='closeMenu'
+          className='closeicon'
           onClick={toggleDrawer(side, false)}
           onKeyDown={toggleDrawer(side, false)}
         >
-          x{/* <img src='./cancel.png' alt='close menu icon'></img> */}
+          <img src='./close.png' alt='close menu icon'></img>
         </div>
-        <ul className='nav-list'>
-          <li>
-            <button onClick={()=>loginWithSpotify()}>Login with Spotify</button>
-          </li>
-          {/* <li>
-            <RegisterForm />
-          </li>
-          <li>
-            <LoginForm />
-          </li> */}
-        </ul>
+
+        {/* <button onClick={()=>loginWithSpotify()}>Login with Spotify</button> */}
+
+        <Session />
       </List>
     </div>
   )
@@ -78,8 +67,7 @@ export default function Nav() {
   return (
     <div>
       <div onClick={toggleDrawer('left', true)} className='menuicon'>
-        MENU
-        {/* <img src='./menu.png' alt='menu icon'></img> */}
+        <img src='./menu.png' alt='menu icon'></img>
       </div>
       <Drawer open={state.left} onClose={toggleDrawer('left', false)}>
         {navList('left')}
