@@ -19,7 +19,7 @@ export default function Nav() {
   const classes = useStyles()
   const [state, setState] = React.useState({
     //! false
-    left: true,
+    left: false,
   })
 
   const toggleDrawer = (side, open) => (event) => {

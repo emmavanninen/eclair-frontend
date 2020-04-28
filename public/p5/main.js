@@ -42,14 +42,14 @@ let mic
 let tune
 
 function preload() {
-    tune = loadSound('alvanoto_U_07.mp4')
+    tune = loadSound('U_05_Alva_Noto.mp4')
 //   tune = loadSound('Vivaldi_The_Four_Seasons_Summer_in_G_Minor_IIIPresto.mp4')
 }
 
 let micOrSound = ''
 
 function setup() {
-  let cnv = createCanvas(windowWidth - 50, windowHeight - 80)
+  let cnv = createCanvas(windowWidth - 50, windowHeight - 50)
   cnv.style('display', 'block')
   angleMode(DEGREES)
   mic = new p5.AudioIn()
@@ -77,9 +77,9 @@ function draw() {
   // console.log(fft.getEnergy("bass"))
 
   //! poles
-  stroke(50, 230, 200)
-//   strokeWeight(2)
-  fill(255, 0, 255)
+  stroke(100, 240, 230)
+  strokeWeight(0.9)
+//   fill(255, 0, 255)
   for (let i = 0; i < spectrum.length; i++) {
     let x = map(i, 0, spectrum.length, 0, width)
     let h = -height + map(spectrum[i], 0, 255, height, 0)
@@ -114,6 +114,8 @@ function draw() {
   // // }
   // endShape();
 
+  
+
   let waveform = fft.waveform()
   noFill()
 
@@ -122,6 +124,7 @@ function draw() {
   translate(width / 2, height / 2)
   beginShape()
   stroke(250, 0, 250)
+  strokeWeight(2)
   for (let i = 0; i <= 360; i++) {
     let r = map(waveform[i], -1, 2, 0, height - 50)
     let x = r * cos(i + 50)
@@ -131,6 +134,7 @@ function draw() {
   endShape()
   beginShape()
   stroke(250, 0, 250)
+  strokeWeight(2)
   for (let i = 0; i <= 360; i++) {
     let r = map(waveform[i], -1, 2.01, 0, height - 50)
     let x = r * cos(i + 100)
@@ -140,6 +144,7 @@ function draw() {
   endShape()
   beginShape()
   stroke(250, 0, 250)
+  strokeWeight(2)
   for (let i = 0; i <= 360; i++) {
     let r = map(waveform[i], -1, 2.02, 0, height - 50)
     let x = r * cos(i + 200)
@@ -149,6 +154,7 @@ function draw() {
   endShape()
   beginShape()
   stroke(250, 0, 250)
+  strokeWeight(2)
   for (let i = 0; i <= 360; i++) {
     let r = map(waveform[i], -1, 2.03, 0, height - 50)
     let x = r * cos(i + 300)
@@ -158,6 +164,7 @@ function draw() {
   endShape()
   beginShape()
   stroke(250, 0, 250)
+  strokeWeight(2)
   for (let i = 0; i <= 360; i++) {
     let r = map(waveform[i], -1, 2.04, 0, height - 50)
     let x = r * cos(i + 500)
@@ -167,6 +174,7 @@ function draw() {
   endShape()
   beginShape()
   stroke(250, 0, 250)
+  strokeWeight(2)
   for (let i = 0; i <= 360; i++) {
     let r = map(waveform[i], -1, 2.05, 0, height - 50)
     let x = r * cos(i)

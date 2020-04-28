@@ -206,6 +206,7 @@
   font-size: 12px;
   margin-top: 1vmin;
   cursor: pointer;
+  max-width: 27vw;
 }
 .playlist-song:hover {
   color: white;
