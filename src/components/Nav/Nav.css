@@ -156,7 +156,8 @@
   line-height: 3vmin;
   font-size: 18px;
   text-transform: uppercase;
-  margin-bottom: 3vmin;
+  margin-top: 2vmin;
+  margin-bottom: 1vmin;
   font-weight: 200;
 }
 .player-title span {
@@ -175,6 +176,13 @@
 
 .spotify-playlists ul {
   padding: 0;
+}
+
+.spotify-playlists button {
+  margin-right: 3vmin;
+  padding: 0;
+  height: 30px;
+  width: 30px;
 }
 
 .spotify-playlist-songs {

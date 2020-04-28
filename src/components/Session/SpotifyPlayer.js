@@ -378,11 +378,6 @@ class SpotifyPlayer extends Component {
               <ul>{this.state.playlists}</ul>
               {this.state.tracks ? (
                 <ul className='spotify-playlist-songs'>
-                  {' '}
-                  {/* <button onClick={this.updateSession}>
-                    Create a new session with playlist{' '}
-                    {this.state.activePlaylist}
-                  </button> */}
                   {this.state.tracks}
                 </ul>
               ) : (
