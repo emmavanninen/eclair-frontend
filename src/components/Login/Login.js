@@ -19,8 +19,11 @@ class Login extends Component {
       console.log(`redux states`, states)
       localStorage.setItem('spotifyToken', JSON.stringify(tokens))
     }
-    window.opener.location.href = 'http://ec2-3-83-182-99.compute-1.amazonaws.com/' || 'http://localhost:3000'
-    window.close()
+    window.opener.location.href =
+    'http://ec2-3-83-182-99.compute-1.amazonaws.com'
+    // || 
+    // 'http://localhost:3000'
+    // window.close()
   }
 
   getHashParams = async () => {
@@ -33,6 +36,8 @@ class Login extends Component {
       hashParams[e[1]] = await decodeURIComponent(e[2])
     }
     try {
+        console.log(`hash`, hashParams);
+        
       return hashParams
     } catch (e) {
       console.log(e)
@@ -40,7 +45,7 @@ class Login extends Component {
   }
 
   render() {
-    return <div>Login in...</div>
+    return <div>Logging in...</div>
   }
 }
 
