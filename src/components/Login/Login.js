@@ -21,9 +21,10 @@ class Login extends Component {
     }
     window.opener.location.href =
     'http://ec2-3-83-182-99.compute-1.amazonaws.com'
+    //! dev
     // || 
     // 'http://localhost:3000'
-    // window.close()
+    window.close()
   }
 
   getHashParams = async () => {

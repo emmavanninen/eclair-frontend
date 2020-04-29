@@ -8,9 +8,6 @@ import MainRouter from './MainRouter'
 import Spinner from './components/Spinner/Spinner'
 
 export default class App extends Component {
-  componentDidMount() {
-    //  checkAuth()
-  }
 
   render() {
     return (
