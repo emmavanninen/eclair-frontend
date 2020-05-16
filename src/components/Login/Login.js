@@ -20,10 +20,10 @@ class Login extends Component {
       localStorage.setItem('spotifyToken', JSON.stringify(tokens))
     }
     window.opener.location.href =
-    'https://devexperiment.com'
+    // 'https://devexperiment.com'
     //! dev
     // || 
-    // 'http://localhost:3000'
+    'http://localhost:5000'
     window.close()
   }
 
