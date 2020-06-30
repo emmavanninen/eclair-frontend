@@ -33,14 +33,6 @@ export default function Nav() {
     setState({ ...state, [side]: open })
   }
 
-  //   const loginWithSpotify = () => {
-  //     window.open(
-  //       'http://localhost:8888',
-  //       'Login with Spotify',
-  //       'width=600,height=600'
-  //     )
-  //   }
-
   const navList = (side) => (
     <div
       className={classes.list}
@@ -49,6 +41,11 @@ export default function Nav() {
       //   onKeyDown={toggleDrawer(side, false)}
     >
       <List className='nav-items'>
+        <img
+          src='./under_construction-tape-png.png'
+          alt='under_construction-tape'
+          style={{width: '100%', position: 'absolute', opacity: '0.5', marginTop: '30vh'}}
+        ></img>
         <div
           className='closeicon'
           onClick={toggleDrawer(side, false)}
@@ -56,8 +53,6 @@ export default function Nav() {
         >
           <img src='./close.png' alt='close menu icon'></img>
         </div>
-
-        {/* <button onClick={()=>loginWithSpotify()}>Login with Spotify</button> */}
 
         <Session />
       </List>
