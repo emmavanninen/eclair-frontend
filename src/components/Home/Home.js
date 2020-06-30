@@ -5,7 +5,6 @@ import { checkAuth } from '../api/setAuth'
 
 export default class Home extends Component {
   componentDidMount = async() =>{
-    console.log('home poop')
       let tokens = await checkAuth()
       console.log('home token', tokens)
     let states = store.getState()

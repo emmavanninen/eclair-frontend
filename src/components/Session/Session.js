@@ -77,7 +77,8 @@ class Session extends Component {
 
   loginWithSpotify = () => {
     window.open(
-      'http://spotifylogin.surge.sh',
+        'http://localhost:8888',
+    //   'http://spotifylogin.surge.sh',
       'Login with Spotify',
       'width=600,height=600'
     )

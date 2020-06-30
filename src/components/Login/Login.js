@@ -11,12 +11,12 @@ class Login extends Component {
   login = async () => {
     const { setCurrentAuthUser } = this.props
     const tokens = await this.getHashParams()
+    
     setCurrentAuthUser(tokens)
 
     let states = store.getState()
 
     if (states.reducer.userInfo.isAuth) {
-      console.log(`redux states`, states)
       localStorage.setItem('spotifyToken', JSON.stringify(tokens))
     }
     window.opener.location.href =

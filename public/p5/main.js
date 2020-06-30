@@ -34,16 +34,12 @@ if (!document.fullscreenElement) {
   })
 }
 
-
-
-
-
 let mic
 let tune
 
 function preload() {
-    tune = loadSound('U_05_Alva_Noto.mp4')
-//   tune = loadSound('Vivaldi_The_Four_Seasons_Summer_in_G_Minor_IIIPresto.mp4')
+  tune = loadSound('U_05_Alva_Noto.mp4')
+  //   tune = loadSound('Vivaldi_The_Four_Seasons_Summer_in_G_Minor_IIIPresto.mp4')
 }
 
 let micOrSound = ''
@@ -56,18 +52,20 @@ function setup() {
 
   fft = new p5.FFT(0.3, 1024)
 
-  
   // !! tune / mic
   //   fft.setInput()
 
   //   let fullscreen = createButton('Fullscreen')
   //   fullscreen.mousePressed(fullscreenToggle)
-  let buttonMic = createButton('Mic on/off')
-  let buttonSound = createButton('Song on/off')
-  buttonMic.position(200, 50)
-  buttonSound.position(200, 100)
-  buttonMic.mousePressed(toggleMic)
-  buttonSound.mousePressed(toggleSound)
+
+  //   let buttonSound = createButton('Sound on')
+  //   let buttonMic = createButton('Mic on')
+  //   buttonSound.position(200, 50)
+  //   buttonMic.position(200, 100)
+  //   buttonSound.mousePressed(toggleBtnTxt)
+  //   buttonMic.mousePressed(toggleMic)
+
+  createBtn(toggleBtnTxt())
 }
 
 function draw() {
@@ -79,7 +77,7 @@ function draw() {
   //! poles
   stroke(100, 240, 230)
   strokeWeight(0.9)
-//   fill(255, 0, 255)
+  //   fill(255, 0, 255)
   for (let i = 0; i < spectrum.length; i++) {
     let x = map(i, 0, spectrum.length, 0, width)
     let h = -height + map(spectrum[i], 0, 255, height, 0)
@@ -113,8 +111,6 @@ function draw() {
   // //   vertex(x, y);
   // // }
   // endShape();
-
-  
 
   let waveform = fft.waveform()
   noFill()
@@ -194,6 +190,16 @@ function draw() {
   // endShape()
 }
 
+function toggleSound() {
+  fft.setInput(tune)
+  if (tune.isPlaying()) {
+    tune.pause()
+    toggleBtnTxt('off')
+  } else {
+    tune.play()
+    toggleBtnTxt('on')
+  }
+}
 function toggleMic() {
   fft.setInput(mic)
   if (mic.stream) {
@@ -202,14 +208,32 @@ function toggleMic() {
     mic.start()
   }
 }
-function toggleSound() {
-  fft.setInput(tune)
-  if (tune.isPlaying()) {
-    tune.pause()
-  } else {
-    tune.play()
-  }
+
+function createBtn(e) {
+  let buttonSound = createButton(e)
+  let buttonMic = createButton('Mic on')
+  buttonSound.position(200, 50)
+  buttonMic.position(200, 100)
+  buttonSound.mousePressed(toggleSound)
+  buttonMic.mousePressed(toggleMic)
 }
+
+function toggleBtnTxt(e) {
+
+  console.log(`?`, e)
+
+  if (!e) {
+    return 'Song on'
+  } else if (e === 'on') {
+    console.log('is playing')
+    createBtn('Song off')
+  } else {
+    console.log('is not playing')
+    createBtn('Song on')
+  }
+
+}
+
 function fullscreenToggle() {
   if (document.fullscreenElement) {
     document.exitFullscreen()
