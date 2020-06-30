@@ -65,7 +65,8 @@ function setup() {
   //   buttonSound.mousePressed(toggleBtnTxt)
   //   buttonMic.mousePressed(toggleMic)
 
-  createBtn(toggleBtnTxt())
+  createSongBtn(toggleSongBtnTxt())
+  createMicBtn(toggleMicBtnTxt())
 }
 
 function draw() {
@@ -194,44 +195,51 @@ function toggleSound() {
   fft.setInput(tune)
   if (tune.isPlaying()) {
     tune.pause()
-    toggleBtnTxt('off')
+    toggleSongBtnTxt('off')
   } else {
     tune.play()
-    toggleBtnTxt('on')
+    toggleSongBtnTxt('on')
   }
 }
 function toggleMic() {
   fft.setInput(mic)
   if (mic.stream) {
     mic.stop()
+    toggleMicBtnTxt('off')
   } else {
     mic.start()
+    toggleMicBtnTxt('on')
   }
 }
 
-function createBtn(e) {
+function createSongBtn(e) {
   let buttonSound = createButton(e)
-  let buttonMic = createButton('Mic on')
   buttonSound.position(200, 50)
-  buttonMic.position(200, 100)
   buttonSound.mousePressed(toggleSound)
+}
+function createMicBtn(e) {
+  let buttonMic = createButton(e)
+  buttonMic.position(200, 100)
   buttonMic.mousePressed(toggleMic)
 }
 
-function toggleBtnTxt(e) {
-
-  console.log(`?`, e)
-
+function toggleSongBtnTxt(e) {
   if (!e) {
     return 'Song on'
   } else if (e === 'on') {
-    console.log('is playing')
-    createBtn('Song off')
+    createSongBtn('Song off')
   } else {
-    console.log('is not playing')
-    createBtn('Song on')
+    createSongBtn('Song on')
   }
-
+}
+function toggleMicBtnTxt(e) {
+  if (!e) {
+    return 'Mic on'
+  } else if (e === 'on') {
+    createMicBtn('Mic off')
+  } else {
+    createMicBtn('Mic on')
+  }
 }
 
 function fullscreenToggle() {
